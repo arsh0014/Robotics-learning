@@ -1,12 +1,25 @@
-import React from 'react';
-import { availableBadges } from '../data/curriculum/class1';
+import React, { useState } from 'react';
+import { class1Badges, class2Badges, class3Badges, class4Badges } from '../data';
 import { useProgress } from '../context/ProgressContext';
 import { useAuth } from '../context/AuthContext';
-import { Lock, Sparkles, CheckCircle2, Trophy } from 'lucide-react';
+import { sound } from '../utils/audio';
+import { Lock, Sparkles, CheckCircle2 } from 'lucide-react';
 
 export const AchievementsPage: React.FC = () => {
   const { progress } = useProgress();
-  const { currentStudent } = useAuth();
+  const { currentStudent, selectedClassId } = useAuth();
+  const [activeTab, setActiveTab] = useState<'class-1' | 'class-2' | 'class-3' | 'class-4'>((selectedClassId as any) || 'class-4');
+
+  const badges =
+    activeTab === 'class-4' ? class4Badges :
+    activeTab === 'class-3' ? class3Badges :
+    activeTab === 'class-2' ? class2Badges :
+    class1Badges;
+
+  const handleSwitchTab = (tab: 'class-1' | 'class-2' | 'class-3' | 'class-4') => {
+    sound.playClick();
+    setActiveTab(tab);
+  };
 
   return (
     <div className="container" style={{ padding: '2.5rem 1.25rem' }}>
@@ -19,8 +32,72 @@ export const AchievementsPage: React.FC = () => {
           Badges & Achievements
         </h1>
         <p style={{ color: 'var(--text-medium)', fontSize: '1.1rem' }}>
-          Earn official STEM badges as you finish chapters, models, and quizzes in Class 1!
+          Earn official STEM badges as you finish chapters, models, and quizzes in Class 1, Class 2, Class 3, and Class 4!
         </p>
+
+        {/* Tab switch */}
+        <div style={{ display: 'inline-flex', gap: '0.5rem', marginTop: '1.25rem', backgroundColor: '#F1F5F9', padding: '4px', borderRadius: 'var(--radius-lg)', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <button
+            onClick={() => handleSwitchTab('class-1')}
+            style={{
+              padding: '0.5rem 1.2rem',
+              borderRadius: 'var(--radius-md)',
+              border: 'none',
+              fontWeight: 800,
+              fontSize: '0.9rem',
+              backgroundColor: activeTab === 'class-1' ? 'var(--primary-blue)' : 'transparent',
+              color: activeTab === 'class-1' ? '#FFFFFF' : 'var(--text-medium)',
+              cursor: 'pointer'
+            }}
+          >
+            Class 1 Badges
+          </button>
+          <button
+            onClick={() => handleSwitchTab('class-2')}
+            style={{
+              padding: '0.5rem 1.2rem',
+              borderRadius: 'var(--radius-md)',
+              border: 'none',
+              fontWeight: 800,
+              fontSize: '0.9rem',
+              backgroundColor: activeTab === 'class-2' ? '#7C3AED' : 'transparent',
+              color: activeTab === 'class-2' ? '#FFFFFF' : 'var(--text-medium)',
+              cursor: 'pointer'
+            }}
+          >
+            Class 2 Badges
+          </button>
+          <button
+            onClick={() => handleSwitchTab('class-3')}
+            style={{
+              padding: '0.5rem 1.2rem',
+              borderRadius: 'var(--radius-md)',
+              border: 'none',
+              fontWeight: 800,
+              fontSize: '0.9rem',
+              backgroundColor: activeTab === 'class-3' ? '#059669' : 'transparent',
+              color: activeTab === 'class-3' ? '#FFFFFF' : 'var(--text-medium)',
+              cursor: 'pointer'
+            }}
+          >
+            Class 3 Badges
+          </button>
+          <button
+            onClick={() => handleSwitchTab('class-4')}
+            style={{
+              padding: '0.5rem 1.2rem',
+              borderRadius: 'var(--radius-md)',
+              border: 'none',
+              fontWeight: 800,
+              fontSize: '0.9rem',
+              backgroundColor: activeTab === 'class-4' ? '#D97706' : 'transparent',
+              color: activeTab === 'class-4' ? '#FFFFFF' : 'var(--text-medium)',
+              cursor: 'pointer'
+            }}
+          >
+            Class 4 Badges
+          </button>
+        </div>
       </div>
 
       {/* Student Rank Card */}
@@ -46,7 +123,7 @@ export const AchievementsPage: React.FC = () => {
               {currentStudent?.name || 'Explorer'}
             </div>
             <div style={{ color: '#B45309', fontWeight: 700, fontSize: '1rem' }}>
-              Level: {currentStudent?.levelTitle || 'Junior Robot Explorer'}
+              Level: {currentStudent?.levelTitle || (activeTab === 'class-2' ? 'Suspension Engineer' : 'Junior Robot Explorer')}
             </div>
           </div>
         </div>
@@ -58,103 +135,91 @@ export const AchievementsPage: React.FC = () => {
             </div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-light)', fontWeight: 700 }}>Total XP</div>
           </div>
+
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--success-green)' }}>
-              {progress.unlockedBadges.length} / {availableBadges.length}
+            <div style={{ fontSize: '2rem', fontWeight: 900, color: '#10B981' }}>
+              {progress.unlockedBadges.length}
             </div>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-light)', fontWeight: 700 }}>Badges Won</div>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-light)', fontWeight: 700 }}>Badges Earned</div>
           </div>
         </div>
       </div>
 
       {/* Badges Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
-        {availableBadges.map(badge => {
-          const isUnlocked = progress.unlockedBadges.includes(badge.id);
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
+        {badges.map(badge => {
+          const isUnlocked = progress.unlockedBadges.includes(badge.id) || progress.xp >= badge.unlockedAtXp;
 
           return (
             <div
               key={badge.id}
-              className="card-base"
+              className={`card-base ${isUnlocked ? 'card-interactive' : ''}`}
               style={{
                 padding: '1.75rem',
                 backgroundColor: isUnlocked ? '#FFFFFF' : '#F8FAFC',
-                border: isUnlocked ? '3px solid #FDE68A' : '2px dashed #CBD5E1',
+                border: isUnlocked ? '2px solid #FDE68A' : '2px dashed var(--border-light)',
                 borderRadius: 'var(--radius-xl)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
                 textAlign: 'center',
-                boxShadow: isUnlocked ? 'var(--shadow-md)' : 'none',
-                opacity: isUnlocked ? 1 : 0.75,
-                position: 'relative'
+                position: 'relative',
+                boxShadow: isUnlocked ? 'var(--shadow-card-hover)' : 'none',
+                opacity: isUnlocked ? 1 : 0.7
               }}
             >
-              {/* Unlocked / Locked Status */}
-              <div style={{ position: 'absolute', top: 14, right: 14 }}>
-                {isUnlocked ? (
-                  <span className="badge-tag" style={{ backgroundColor: '#D1FAE5', color: '#065F46', padding: '0.2rem 0.6rem', fontSize: '0.75rem' }}>
-                    <CheckCircle2 size={12} /> UNLOCKED
-                  </span>
-                ) : (
-                  <span className="badge-tag" style={{ backgroundColor: '#F1F5F9', color: '#94A3B8', padding: '0.2rem 0.6rem', fontSize: '0.75rem' }}>
-                    <Lock size={12} /> {badge.unlockedAtXp} XP
-                  </span>
-                )}
-              </div>
-
-              {/* Icon */}
               <div
                 style={{
-                  fontSize: '3.5rem',
-                  filter: isUnlocked ? 'none' : 'grayscale(100%) opacity(40%)',
-                  margin: '0.5rem 0 0.75rem'
+                  fontSize: '3.8rem',
+                  marginBottom: '1rem',
+                  filter: isUnlocked ? 'none' : 'grayscale(100%) opacity(40%)'
                 }}
               >
                 {badge.icon}
               </div>
 
-              <h3 style={{ fontSize: '1.25rem', color: isUnlocked ? 'var(--text-dark)' : 'var(--text-light)', marginBottom: '0.4rem' }}>
+              <h3 style={{ fontSize: '1.25rem', color: 'var(--text-dark)', marginBottom: '0.35rem' }}>
                 {badge.title}
               </h3>
 
-              <p style={{ fontSize: '0.9rem', color: 'var(--text-medium)', lineHeight: 1.45 }}>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-medium)', marginBottom: '1.25rem', lineHeight: 1.4 }}>
                 {badge.description}
               </p>
+
+              <div style={{ marginTop: 'auto', width: '100%' }}>
+                {isUnlocked ? (
+                  <span
+                    className="badge-tag"
+                    style={{
+                      backgroundColor: '#D1FAE5',
+                      color: '#065F46',
+                      width: '100%',
+                      padding: '0.45rem',
+                      justifyContent: 'center',
+                      fontWeight: 800
+                    }}
+                  >
+                    <CheckCircle2 size={16} /> UNLOCKED
+                  </span>
+                ) : (
+                  <span
+                    className="badge-tag"
+                    style={{
+                      backgroundColor: '#F1F5F9',
+                      color: '#94A3B8',
+                      width: '100%',
+                      padding: '0.45rem',
+                      justifyContent: 'center',
+                      fontWeight: 700
+                    }}
+                  >
+                    <Lock size={14} /> Unlocks at {badge.unlockedAtXp} XP
+                  </span>
+                )}
+              </div>
             </div>
           );
         })}
-      </div>
-
-      {/* Official Certificate of Achievement */}
-      <div
-        className="card-base"
-        style={{
-          padding: '2.5rem',
-          background: 'linear-gradient(135deg, #FFFFFF 0%, #FFFBEB 100%)',
-          border: '4px double #F59E0B',
-          borderRadius: 'var(--radius-xl)',
-          textAlign: 'center',
-          maxWidth: '720px',
-          margin: '0 auto',
-          boxShadow: 'var(--shadow-lg)'
-        }}
-      >
-        <Trophy size={48} color="#D97706" style={{ margin: '0 auto 0.75rem' }} />
-        <span style={{ fontSize: '0.85rem', letterSpacing: '0.15em', fontWeight: 900, color: '#B45309', textTransform: 'uppercase' }}>
-          RoboBox Innovation Academy
-        </span>
-        <h2 style={{ fontSize: '2rem', color: 'var(--text-dark)', margin: '0.5rem 0 1rem' }}>
-          Certificate of Robotics Explorer
-        </h2>
-        <p style={{ fontSize: '1.05rem', color: 'var(--text-medium)', maxWidth: '520px', margin: '0 auto 1.5rem', lineHeight: 1.5 }}>
-          This certifies that <strong>{currentStudent?.name || 'Aanya'}</strong> has demonstrated outstanding curiosity, creativity, and hands-on skills in Class 1 Robotics & Innovation!
-        </p>
-
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', alignItems: 'center', color: '#92400E', fontWeight: 700, fontSize: '0.9rem' }}>
-          <span>⭐ LEGO Wall</span> • 
-          <span>🔺 Tangram</span> • 
-          <span>⚙️ Motors & Wheels</span> • 
-          <span>🧪 STEM Lab</span> • 
-          <span>⚡ Queaky</span>
-        </div>
       </div>
     </div>
   );

@@ -1,15 +1,20 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import { StudentProgress, Badge } from '../types/curriculum';
-import { availableBadges, class1Chapters } from '../data/curriculum/class1';
+import { class1Chapters } from '../data/curriculum/class1';
+import { class2Chapters } from '../data/curriculum/class2';
+import { class3Chapters } from '../data/curriculum/class3';
+import { class4Chapters } from '../data/curriculum/class4';
+import { getChaptersForClass, getBadgesForClass } from '../data';
+import { useAuth } from './AuthContext';
 import { sound } from '../utils/audio';
 
 interface ProgressContextType {
   progress: StudentProgress;
   completeLesson: (lessonId: string, chapterId: string) => void;
-  completeActivity: (activityId: string, xpReward: number) => void;
-  completeModel: (modelId: string, xpReward: number) => void;
-  saveQuizScore: (chapterId: string, scorePercent: number, xpReward: number) => void;
+  completeActivity: (activityId: string, xpReward?: number) => void;
+  completeModel: (modelId: string, xpReward?: number) => void;
+  saveQuizScore: (chapterId: string, scorePercent: number, xpReward?: number) => void;
   saveWrittenAnswer: (questionId: string, answer: string) => void;
   addNote: (title: string, content: string, drawingData?: string) => void;
   isLessonCompleted: (lessonId: string) => boolean;
@@ -17,11 +22,13 @@ interface ProgressContextType {
   isModelCompleted: (modelId: string) => boolean;
   isChapterCompleted: (chapterId: string) => boolean;
   getChapterProgress: (chapterId: string) => number; // 0 to 100 percentage
-  overallClassProgress: number; // 0 to 100 percentage
+  overallClassProgress: number; // 0 to 100 percentage for active class
+  getClassProgress: (classId: string) => number; // 0 to 100 percentage for specific class
+  getClassCompletedCount: (classId: string) => { lessons: number; chapters: number; xp: number };
   unlockedBadgeObjects: Badge[];
 }
 
-const defaultProgress: StudentProgress = {
+const defaultProgressClass1: StudentProgress = {
   completedLessons: ['l-1-1-definition'], // friendly starter progress
   completedActivities: [],
   completedModels: [],
@@ -32,9 +39,66 @@ const defaultProgress: StudentProgress = {
   unlockedBadges: [],
   notes: [
     {
-      id: 'note-welcome',
+      id: 'note-welcome-c1',
       title: 'My First Robot Idea',
       content: 'I want to build a robot that has round wheels and can draw with a pencil!',
+      date: 'Today'
+    }
+  ]
+};
+
+const defaultProgressClass2: StudentProgress = {
+  completedLessons: ['c2-l-1-1-blocks-structure'], // friendly starter progress
+  completedActivities: [],
+  completedModels: [],
+  completedChapters: [],
+  quizScores: {},
+  writtenAnswers: {},
+  xp: 80,
+  unlockedBadges: [],
+  notes: [
+    {
+      id: 'note-welcome-c2',
+      title: 'Class 2 Robot Invention',
+      content: 'I want to build an off-road rover with dual suspension springs to climb over rocky terrain!',
+      date: 'Today'
+    }
+  ]
+};
+
+const defaultProgressClass3: StudentProgress = {
+  completedLessons: ['c3-l-1-1-what-is-mechanics'], // friendly starter progress
+  completedActivities: [],
+  completedModels: [],
+  completedChapters: [],
+  quizScores: {},
+  writtenAnswers: {},
+  xp: 90,
+  unlockedBadges: [],
+  notes: [
+    {
+      id: 'note-welcome-c3',
+      title: 'My Standard 3 Robot Idea',
+      content: 'I want to build an all-terrain crawler robot with compound gears and code a talking robot in Scratch!',
+      date: 'Today'
+    }
+  ]
+};
+
+const defaultProgressClass4: StudentProgress = {
+  completedLessons: ['c4-l1-1'], // friendly starter progress
+  completedActivities: [],
+  completedModels: [],
+  completedChapters: [],
+  quizScores: {},
+  writtenAnswers: {},
+  xp: 100,
+  unlockedBadges: [],
+  notes: [
+    {
+      id: 'note-welcome-c4',
+      title: 'Class 4 Robotics Journey',
+      content: 'I want to build a 4WD rover with a manual gearbox, explore Hyperloops and electromagnetics, and code AI projects in PictoBlox!',
       date: 'Today'
     }
   ]
@@ -43,21 +107,73 @@ const defaultProgress: StudentProgress = {
 const ProgressContext = createContext<ProgressContextType | undefined>(undefined);
 
 export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [progress, setProgress] = useState<StudentProgress>(() => {
-    const saved = localStorage.getItem('robobox_learn_progress_v1');
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch {
-        return defaultProgress;
-      }
+  const { selectedClassId } = useAuth();
+
+  // Progress state stored per-class
+  const [progressState, setProgressState] = useState<Record<string, StudentProgress>>(() => {
+    // 1. Check legacy Class 1 storage to maintain backwards compatibility
+    let c1 = defaultProgressClass1;
+    const savedC1Legacy = localStorage.getItem('robobox_learn_progress_v1');
+    const savedC1New = localStorage.getItem('robobox_progress_class-1');
+    if (savedC1New) {
+      try { c1 = JSON.parse(savedC1New); } catch {}
+    } else if (savedC1Legacy) {
+      try { c1 = JSON.parse(savedC1Legacy); } catch {}
     }
-    return defaultProgress;
+
+    // 2. Check Class 2 storage
+    let c2 = defaultProgressClass2;
+    const savedC2 = localStorage.getItem('robobox_progress_class-2');
+    if (savedC2) {
+      try { c2 = JSON.parse(savedC2); } catch {}
+    }
+
+    // 3. Check Class 3 storage
+    let c3 = defaultProgressClass3;
+    const savedC3 = localStorage.getItem('robobox_progress_class-3');
+    if (savedC3) {
+      try { c3 = JSON.parse(savedC3); } catch {}
+    }
+
+    // 4. Check Class 4 storage
+    let c4 = defaultProgressClass4;
+    const savedC4 = localStorage.getItem('robobox_progress_class-4');
+    if (savedC4) {
+      try { c4 = JSON.parse(savedC4); } catch {}
+    }
+
+    return {
+      'class-1': c1,
+      'class-2': c2,
+      'class-3': c3,
+      'class-4': c4
+    };
   });
 
+  const activeClassId = selectedClassId || 'class-1';
+  const progress = progressState[activeClassId] || (
+    activeClassId === 'class-4' ? defaultProgressClass4 :
+    activeClassId === 'class-3' ? defaultProgressClass3 :
+    activeClassId === 'class-2' ? defaultProgressClass2 :
+    defaultProgressClass1
+  );
+
+  // Sync to local storage on changes
   useEffect(() => {
-    localStorage.setItem('robobox_learn_progress_v1', JSON.stringify(progress));
-  }, [progress]);
+    if (progressState['class-1']) {
+      localStorage.setItem('robobox_progress_class-1', JSON.stringify(progressState['class-1']));
+      localStorage.setItem('robobox_learn_progress_v1', JSON.stringify(progressState['class-1'])); // preserve legacy key
+    }
+    if (progressState['class-2']) {
+      localStorage.setItem('robobox_progress_class-2', JSON.stringify(progressState['class-2']));
+    }
+    if (progressState['class-3']) {
+      localStorage.setItem('robobox_progress_class-3', JSON.stringify(progressState['class-3']));
+    }
+    if (progressState['class-4']) {
+      localStorage.setItem('robobox_progress_class-4', JSON.stringify(progressState['class-4']));
+    }
+  }, [progressState]);
 
   const triggerCelebration = () => {
     sound.playSuccess();
@@ -72,13 +188,25 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
+  const updateCurrentProgress = (updater: (prev: StudentProgress) => StudentProgress) => {
+    setProgressState(all => {
+      const current = all[activeClassId] || (activeClassId === 'class-2' ? defaultProgressClass2 : defaultProgressClass1);
+      const updated = updater(current);
+      return {
+        ...all,
+        [activeClassId]: updated
+      };
+    });
+  };
+
   const addXp = (amount: number, newBadges: string[] = []) => {
-    setProgress(prev => {
+    updateCurrentProgress(prev => {
       const nextXp = prev.xp + amount;
       const updatedBadges = [...prev.unlockedBadges];
+      const classBadges = getBadgesForClass(activeClassId);
 
       // Check badge thresholds
-      availableBadges.forEach(b => {
+      classBadges.forEach(b => {
         if (nextXp >= b.unlockedAtXp && !updatedBadges.includes(b.id)) {
           updatedBadges.push(b.id);
           triggerCelebration();
@@ -103,7 +231,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     if (progress.completedLessons.includes(lessonId)) return;
 
     sound.playClick();
-    setProgress(prev => ({
+    updateCurrentProgress(prev => ({
       ...prev,
       completedLessons: [...prev.completedLessons, lessonId]
     }));
@@ -115,7 +243,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     if (progress.completedActivities.includes(activityId)) return;
 
     triggerCelebration();
-    setProgress(prev => ({
+    updateCurrentProgress(prev => ({
       ...prev,
       completedActivities: [...prev.completedActivities, activityId]
     }));
@@ -126,7 +254,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     if (progress.completedModels.includes(modelId)) return;
 
     triggerCelebration();
-    setProgress(prev => ({
+    updateCurrentProgress(prev => ({
       ...prev,
       completedModels: [...prev.completedModels, modelId]
     }));
@@ -135,7 +263,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const saveQuizScore = (chapterId: string, scorePercent: number, xpReward: number = 25) => {
     sound.playSuccess();
-    setProgress(prev => ({
+    updateCurrentProgress(prev => ({
       ...prev,
       quizScores: {
         ...prev.quizScores,
@@ -148,7 +276,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const saveWrittenAnswer = (questionId: string, answer: string) => {
     sound.playClick();
-    setProgress(prev => ({
+    updateCurrentProgress(prev => ({
       ...prev,
       writtenAnswers: {
         ...prev.writtenAnswers,
@@ -160,7 +288,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const addNote = (title: string, content: string, drawingData?: string) => {
     sound.playSuccess();
-    setProgress(prev => ({
+    updateCurrentProgress(prev => ({
       ...prev,
       notes: [
         {
@@ -182,23 +310,26 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const isChapterCompleted = (chapterId: string) => progress.completedChapters.includes(chapterId);
 
   const getChapterProgress = (chapterId: string): number => {
-    const ch = class1Chapters.find(c => c.id === chapterId);
+    const allChapters = [...class1Chapters, ...class2Chapters, ...class3Chapters, ...class4Chapters];
+    const ch = allChapters.find(c => c.id === chapterId);
     if (!ch) return 0;
+
+    const classProg = progressState[ch.classId] || progress;
 
     let totalItems = ch.lessons.length + ch.activities.length + ch.models.length + (ch.quiz.length > 0 ? 1 : 0);
     if (totalItems === 0) return 0;
 
     let completedItems = 0;
     ch.lessons.forEach(l => {
-      if (progress.completedLessons.includes(l.id)) completedItems++;
+      if (classProg.completedLessons.includes(l.id)) completedItems++;
     });
     ch.activities.forEach(a => {
-      if (progress.completedActivities.includes(a.id)) completedItems++;
+      if (classProg.completedActivities.includes(a.id)) completedItems++;
     });
     ch.models.forEach(m => {
-      if (progress.completedModels.includes(m.id)) completedItems++;
+      if (classProg.completedModels.includes(m.id)) completedItems++;
     });
-    if (progress.quizScores[chapterId] !== undefined) {
+    if (classProg.quizScores[chapterId] !== undefined) {
       completedItems++;
     }
 
@@ -208,7 +339,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const checkChapterCompletion = (chapterId: string) => {
     const pct = getChapterProgress(chapterId);
     if (pct >= 80 && !progress.completedChapters.includes(chapterId)) {
-      setProgress(prev => ({
+      updateCurrentProgress(prev => ({
         ...prev,
         completedChapters: [...prev.completedChapters, chapterId]
       }));
@@ -217,11 +348,31 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
-  const overallClassProgress = Math.round(
-    class1Chapters.reduce((acc, ch) => acc + getChapterProgress(ch.id), 0) / class1Chapters.length
-  );
+  const getClassProgress = (classId: string): number => {
+    const chapters = getChaptersForClass(classId);
+    if (!chapters || chapters.length === 0) return 0;
+    const total = chapters.reduce((acc, ch) => acc + getChapterProgress(ch.id), 0);
+    return Math.round(total / chapters.length);
+  };
 
-  const unlockedBadgeObjects = availableBadges.filter(b => progress.unlockedBadges.includes(b.id));
+  const getClassCompletedCount = (classId: string) => {
+    const p = progressState[classId] || (
+      classId === 'class-4' ? defaultProgressClass4 :
+      classId === 'class-3' ? defaultProgressClass3 :
+      classId === 'class-2' ? defaultProgressClass2 :
+      defaultProgressClass1
+    );
+    return {
+      lessons: p.completedLessons.length,
+      chapters: p.completedChapters.length,
+      xp: p.xp
+    };
+  };
+
+  const overallClassProgress = getClassProgress(activeClassId);
+
+  const activeBadges = getBadgesForClass(activeClassId);
+  const unlockedBadgeObjects = activeBadges.filter(b => progress.unlockedBadges.includes(b.id));
 
   return (
     <ProgressContext.Provider
@@ -239,6 +390,8 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         isChapterCompleted,
         getChapterProgress,
         overallClassProgress,
+        getClassProgress,
+        getClassCompletedCount,
         unlockedBadgeObjects
       }}
     >

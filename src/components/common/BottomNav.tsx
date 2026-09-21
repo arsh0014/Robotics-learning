@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Compass, FlaskConical, Zap, BookOpen, Edit3, Award } from 'lucide-react';
+import { Home, Compass, BarChart2, FlaskConical, Zap, BookOpen, Edit3, Award } from 'lucide-react';
 import { sound } from '../../utils/audio';
 
 interface BottomNavProps {
@@ -11,6 +11,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ activeView, onNavigate }) 
   const navItems = [
     { id: 'dashboard', label: 'Home', icon: Home },
     { id: 'journey', label: 'Journey', icon: Compass },
+    { id: 'progress', label: 'Progress', icon: BarChart2 },
     { id: 'stem_lab', label: 'STEM Lab', icon: FlaskConical },
     { id: 'queaky_hub', label: 'Queaky', icon: Zap },
     { id: 'glossary', label: 'Words', icon: BookOpen },

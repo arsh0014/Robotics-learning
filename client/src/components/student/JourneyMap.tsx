@@ -1,22 +1,33 @@
 import React from 'react';
 import { useProgress } from '../../context/ProgressContext';
-import { class1Chapters } from '../../data/curriculum/class1';
+import { useAuth } from '../../context/AuthContext';
+import { getChaptersForClass } from '../../data';
 import { Check, Lock, Play, Sparkles } from 'lucide-react';
 import { sound } from '../../utils/audio';
 
 interface JourneyMapProps {
   onSelectChapter: (chapterId: string) => void;
+  classId?: string;
 }
 
-export const JourneyMap: React.FC<JourneyMapProps> = ({ onSelectChapter }) => {
+export const JourneyMap: React.FC<JourneyMapProps> = ({ onSelectChapter, classId }) => {
+  const { selectedClassId } = useAuth();
   const { isChapterCompleted, getChapterProgress } = useProgress();
+
+  const activeClassId = classId || selectedClassId || 'class-1';
+  const chapters = getChaptersForClass(activeClassId);
+  const classLabel =
+    activeClassId === 'class-4' ? 'Class 4' :
+    activeClassId === 'class-3' ? 'Class 3' :
+    activeClassId === 'class-2' ? 'Class 2' :
+    'Class 1';
 
   return (
     <div className="journey-container">
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <h2 style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
           <span>🚀</span>
-          <span>My Class 1 Robotics Journey</span>
+          <span>My {classLabel} Robotics Journey</span>
         </h2>
         <p style={{ color: 'var(--text-light)', marginTop: '0.25rem' }}>
           Follow the learning adventure path chapter by chapter!
@@ -24,12 +35,12 @@ export const JourneyMap: React.FC<JourneyMapProps> = ({ onSelectChapter }) => {
       </div>
 
       <div className="journey-path">
-        {class1Chapters.map((chapter, index) => {
+        {chapters.map((chapter, index) => {
           const isCompleted = isChapterCompleted(chapter.id);
           const progressPct = getChapterProgress(chapter.id);
           
           // Current chapter is first uncompleted, or completed
-          const isPrevCompleted = index === 0 || isChapterCompleted(class1Chapters[index - 1].id) || getChapterProgress(class1Chapters[index - 1].id) > 0;
+          const isPrevCompleted = index === 0 || isChapterCompleted(chapters[index - 1].id) || getChapterProgress(chapters[index - 1].id) > 0;
           const isCurrent = !isCompleted && isPrevCompleted;
           const isLocked = !isCompleted && !isPrevCompleted;
 

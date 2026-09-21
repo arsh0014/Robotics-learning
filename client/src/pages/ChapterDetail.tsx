@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { class1Chapters } from '../data/curriculum/class1';
+import { class2Chapters } from '../data/curriculum/class2';
+import { class3Chapters } from '../data/curriculum/class3';
+import { class4Chapters } from '../data/curriculum/class4';
 import { useProgress } from '../context/ProgressContext';
 import { LessonViewer } from '../components/student/LessonViewer';
 import { ModelBuilder } from '../components/student/ModelBuilder';
@@ -10,6 +13,25 @@ import { TangramPlayground } from '../components/student/interactive/TangramPlay
 import { MotorSimulator } from '../components/student/interactive/MotorSimulator';
 import { StemLabExperiments } from '../components/student/interactive/StemLabExperiments';
 import { QueakySynthesizer } from '../components/student/interactive/QueakySynthesizer';
+import { LegoWallBuilder } from '../components/class2/LegoWallBuilder';
+import { TangramCatSymmetry } from '../components/class2/TangramCatSymmetry';
+import { BatteryRobotActivity } from '../components/class2/BatteryRobotActivity';
+import { Class2StemLab } from '../components/class2/Class2StemLab';
+import { Class2QueakyStudio } from '../components/class2/Class2QueakyStudio';
+import { SimpleMachinesExplorer } from '../components/class3/SimpleMachinesExplorer';
+import { ThreeDPenSandbox } from '../components/class3/ThreeDPenSandbox';
+import { AartiSetSimulator } from '../components/class3/AartiSetSimulator';
+import { BalanceBotSimulator } from '../components/class3/BalanceBotSimulator';
+import { CrawlerSimulator } from '../components/class3/CrawlerSimulator';
+import { GearTrainSimulator } from '../components/class3/GearTrainSimulator';
+import { ScratchBlockStudio } from '../components/class3/ScratchBlockStudio';
+import { HumanoidRobotExplorer } from '../components/class4/HumanoidRobotExplorer';
+import { ThreeDPenStudio } from '../components/class4/ThreeDPenStudio';
+import { GearBoxSimulator } from '../components/class4/GearBoxSimulator';
+import { MegastructureStudio } from '../components/class4/MegastructureStudio';
+import { CircuitLab } from '../components/class4/CircuitLab';
+import { LogicGatesWaterAlarm } from '../components/class4/LogicGatesWaterAlarm';
+import { PictoBloxStudio } from '../components/class4/PictoBloxStudio';
 import { sound } from '../utils/audio';
 import { BookOpen, Puzzle, Cog, CheckSquare, Edit, Lightbulb, ArrowLeft, CheckCircle2, Sparkles } from 'lucide-react';
 
@@ -20,7 +42,8 @@ interface ChapterDetailProps {
 }
 
 export const ChapterDetail: React.FC<ChapterDetailProps> = ({ chapterId, onBack, onNextChapter }) => {
-  const chapter = class1Chapters.find(c => c.id === chapterId) || class1Chapters[0];
+  const allChapters = [...class1Chapters, ...class2Chapters, ...class3Chapters, ...class4Chapters];
+  const chapter = allChapters.find(c => c.id === chapterId) || allChapters[0];
   const { getChapterProgress, isChapterCompleted } = useProgress();
 
   const [activeTab, setActiveTab] = useState<'lessons' | 'activity' | 'models' | 'quiz' | 'written' | 'fun_fact'>('lessons');
@@ -29,9 +52,14 @@ export const ChapterDetail: React.FC<ChapterDetailProps> = ({ chapterId, onBack,
   const progressPct = getChapterProgress(chapter.id);
   const isDone = isChapterCompleted(chapter.id);
 
-  // Determine next chapter
-  const currentIndex = class1Chapters.findIndex(c => c.id === chapter.id);
-  const nextChapter = class1Chapters[currentIndex + 1];
+  // Determine next chapter within the same class
+  const classChapters =
+    chapter.classId === 'class-4' ? class4Chapters :
+    chapter.classId === 'class-3' ? class3Chapters :
+    chapter.classId === 'class-2' ? class2Chapters :
+    class1Chapters;
+  const currentIndex = classChapters.findIndex(c => c.id === chapter.id);
+  const nextChapter = classChapters[currentIndex + 1];
 
   const handleTabClick = (tab: typeof activeTab) => {
     sound.playClick();
@@ -164,11 +192,37 @@ export const ChapterDetail: React.FC<ChapterDetailProps> = ({ chapterId, onBack,
 
         {activeTab === 'activity' && (
           <div>
+            {/* Class 1 Activities */}
             {chapter.id === 'ch-1-lego-wall' && <LegoBuilder onComplete={handleFinishSection} />}
             {chapter.id === 'ch-2-tangram' && <TangramPlayground onComplete={handleFinishSection} />}
             {chapter.id === 'ch-3-motors-wheels' && <MotorSimulator onComplete={handleFinishSection} />}
             {chapter.id === 'ch-4-stem-projects' && <StemLabExperiments />}
             {chapter.id === 'ch-5-queaky' && <QueakySynthesizer onComplete={handleFinishSection} />}
+
+            {/* Class 2 Activities */}
+            {chapter.id === 'c2-ch-1-lego-wall' && <LegoWallBuilder onComplete={handleFinishSection} />}
+            {chapter.id === 'c2-ch-2-tangram' && <TangramCatSymmetry onComplete={handleFinishSection} />}
+            {chapter.id === 'c2-ch-3-battery' && <BatteryRobotActivity onComplete={handleFinishSection} />}
+            {chapter.id === 'c2-ch-4-stem-projects' && <Class2StemLab onComplete={handleFinishSection} />}
+            {chapter.id === 'c2-ch-5-queaky' && <Class2QueakyStudio onComplete={handleFinishSection} />}
+
+            {/* Class 3 Activities */}
+            {chapter.id === 'c3-ch-1-intro-mechanics' && <SimpleMachinesExplorer onComplete={handleFinishSection} />}
+            {chapter.id === 'c3-ch-2-3d-pen' && <ThreeDPenSandbox onComplete={handleFinishSection} />}
+            {chapter.id === 'c3-ch-3-battery-control' && <AartiSetSimulator onComplete={handleFinishSection} />}
+            {chapter.id === 'c3-ch-4-building-mechanics-1' && <BalanceBotSimulator onComplete={handleFinishSection} />}
+            {chapter.id === 'c3-ch-5-building-mechanics-2' && <CrawlerSimulator onComplete={handleFinishSection} />}
+            {chapter.id === 'c3-ch-6-building-structures' && <GearTrainSimulator onComplete={handleFinishSection} />}
+            {chapter.id === 'c3-ch-7-scratch-coding' && <ScratchBlockStudio onComplete={handleFinishSection} />}
+
+            {/* Class 4 Activities */}
+            {chapter.id === 'c4-ch-1' && <HumanoidRobotExplorer />}
+            {chapter.id === 'c4-ch-2' && <ThreeDPenStudio />}
+            {chapter.id === 'c4-ch-3' && <GearBoxSimulator />}
+            {chapter.id === 'c4-ch-4' && <MegastructureStudio />}
+            {chapter.id === 'c4-ch-5' && <CircuitLab />}
+            {chapter.id === 'c4-ch-6' && <LogicGatesWaterAlarm />}
+            {chapter.id === 'c4-ch-7' && <PictoBloxStudio />}
           </div>
         )}
 
@@ -223,7 +277,7 @@ export const ChapterDetail: React.FC<ChapterDetailProps> = ({ chapterId, onBack,
         )}
       </div>
 
-      {/* Completion Celebration Modal (Prompt #25) */}
+      {/* Completion Celebration Modal */}
       {showCompletionModal && (
         <div
           style={{
@@ -250,55 +304,40 @@ export const ChapterDetail: React.FC<ChapterDetailProps> = ({ chapterId, onBack,
               animation: 'pop-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'
             }}
           >
-            <Sparkles size={56} color="#F59E0B" style={{ margin: '0 auto 0.75rem' }} />
-            <h2 style={{ fontSize: '2rem', color: 'var(--text-dark)', marginBottom: '0.5rem' }}>
-              🎉 Chapter Complete!
+            <div style={{ fontSize: '4rem', marginBottom: '0.5rem' }}>🎉</div>
+            <span className="badge-tag" style={{ backgroundColor: '#D1FAE5', color: '#065F46', marginBottom: '0.75rem' }}>
+              <Sparkles size={16} /> Chapter Completed!
+            </span>
+            <h2 style={{ fontSize: '1.8rem', color: 'var(--text-dark)', marginBottom: '0.5rem' }}>
+              Awesome Job, Explorer!
             </h2>
-            <p style={{ fontSize: '1.1rem', color: 'var(--text-medium)', marginBottom: '1.5rem' }}>
-              You have completed <strong>{chapter.title}</strong>! You mastered key concepts and earned your XP reward.
+            <p style={{ color: 'var(--text-medium)', marginBottom: '1.75rem', lineHeight: 1.5 }}>
+              You have mastered <strong>{chapter.title}</strong>! You earned +50 Bonus XP and unlocked the next adventure on your roadmap.
             </p>
 
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '2rem' }}>
-              <div style={{ padding: '0.8rem 1.4rem', backgroundColor: '#FEF3C7', borderRadius: 'var(--radius-lg)', color: '#B45309', fontWeight: 800 }}>
-                ⭐ +50 Bonus XP
-              </div>
-              <div style={{ padding: '0.8rem 1.4rem', backgroundColor: '#D1FAE5', borderRadius: 'var(--radius-lg)', color: '#065F46', fontWeight: 800 }}>
-                🏆 Badge Unlocked
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
-              <button
-                className="btn-secondary"
-                onClick={() => setShowCompletionModal(false)}
-                style={{ padding: '0.75rem 1.25rem' }}
-              >
-                Review Chapter
-              </button>
-
-              {nextChapter ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              {nextChapter && onNextChapter && (
                 <button
                   className="btn-primary"
                   onClick={() => {
                     setShowCompletionModal(false);
-                    if (onNextChapter) onNextChapter(nextChapter.id);
+                    onNextChapter(nextChapter.id);
                   }}
-                  style={{ padding: '0.75rem 1.75rem' }}
+                  style={{ width: '100%', padding: '0.85rem', fontSize: '1.05rem' }}
                 >
-                  Continue Journey ➔
-                </button>
-              ) : (
-                <button
-                  className="btn-success"
-                  onClick={() => {
-                    setShowCompletionModal(false);
-                    onBack();
-                  }}
-                  style={{ padding: '0.75rem 1.75rem' }}
-                >
-                  Return to Dashboard
+                  <span>Continue to Chapter {nextChapter.number}: {nextChapter.title} ➔</span>
                 </button>
               )}
+              <button
+                className="btn-secondary"
+                onClick={() => {
+                  setShowCompletionModal(false);
+                  onBack();
+                }}
+                style={{ width: '100%', padding: '0.75rem' }}
+              >
+                <span>Back to Journey Map</span>
+              </button>
             </div>
           </div>
         </div>

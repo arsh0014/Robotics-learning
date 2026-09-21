@@ -33,7 +33,7 @@ export const AdminDashboard: React.FC = () => {
               </span>
             </div>
             <p style={{ color: '#94A3B8', fontSize: '0.95rem' }}>
-              RoboBox Learn Master Control & Curriculum Infrastructure
+              RoboBox Learn Master Control & Multi-Grade Curriculum Infrastructure
             </p>
           </div>
         </div>
@@ -41,71 +41,229 @@ export const AdminDashboard: React.FC = () => {
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', backgroundColor: '#334155', padding: '0.6rem 1.2rem', borderRadius: 'var(--radius-lg)' }}>
           <Database size={20} color="#38BDF8" />
           <div>
-            <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>Database Architecture:</div>
-            <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#38BDF8' }}>Ready for Supabase Sync</div>
+            <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>System Status:</div>
+            <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#38BDF8' }}>{mockAdmin.systemStatus}</div>
           </div>
         </div>
       </div>
 
-      {/* Metrics Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem', marginBottom: '2rem' }}>
+      {/* Metrics Row (Prompt Requirements: Total Students, Class 1 Students, Class 2 Students, Teachers, Available Lessons, Completed Lessons, Quiz Attempts) */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.25rem', marginBottom: '2rem' }}>
         <div className="card-base" style={{ padding: '1.25rem' }}>
-          <div style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-light)', marginBottom: '0.35rem' }}>
-            ACTIVE CLASS
+          <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-light)', marginBottom: '0.35rem' }}>
+            TOTAL STUDENTS
           </div>
-          <div style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--primary-blue)' }}>
-            Class 1 Foundation
-          </div>
-          <span style={{ fontSize: '0.8rem', color: 'var(--success-green)', fontWeight: 700 }}>
-            ● 100% Textbook Verified
-          </span>
-        </div>
-
-        <div className="card-base" style={{ padding: '1.25rem' }}>
-          <div style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-light)', marginBottom: '0.35rem' }}>
-            EXPANSION ROADMAP
-          </div>
-          <div style={{ fontSize: '2rem', fontWeight: 900, color: '#8B5CF6' }}>
-            8 Classes Total
-          </div>
-          <span style={{ fontSize: '0.8rem', color: 'var(--text-light)' }}>
-            Classes 2–8 Locked / Schema Prepared
-          </span>
-        </div>
-
-        <div className="card-base" style={{ padding: '1.25rem' }}>
-          <div style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-light)', marginBottom: '0.35rem' }}>
-            STUDENTS ENROLLED
-          </div>
-          <div style={{ fontSize: '2rem', fontWeight: 900, color: '#F59E0B' }}>
+          <div style={{ fontSize: '2rem', fontWeight: 900, color: '#2563EB' }}>
             {mockAdmin.totalStudentsEnrolled}
           </div>
-          <span style={{ fontSize: '0.8rem', color: 'var(--success-green)' }}>
+          <span style={{ fontSize: '0.8rem', color: 'var(--success-green)', fontWeight: 700 }}>
             Across 6 partner schools
           </span>
         </div>
 
         <div className="card-base" style={{ padding: '1.25rem' }}>
-          <div style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-light)', marginBottom: '0.35rem' }}>
-            CERTIFIED TEACHERS
+          <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-light)', marginBottom: '0.35rem' }}>
+            CLASS 1 STUDENTS
+          </div>
+          <div style={{ fontSize: '2rem', fontWeight: 900, color: '#3B82F6' }}>
+            {mockAdmin.class1Students}
+          </div>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-light)' }}>
+            Primary Grade Cohort
+          </span>
+        </div>
+
+        <div className="card-base" style={{ padding: '1.25rem' }}>
+          <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-light)', marginBottom: '0.35rem' }}>
+            CLASS 2 STUDENTS
+          </div>
+          <div style={{ fontSize: '2rem', fontWeight: 900, color: '#7C3AED' }}>
+            {mockAdmin.class2Students}
+          </div>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-light)' }}>
+            Standard 2 Active Cohort
+          </span>
+        </div>
+
+        <div className="card-base" style={{ padding: '1.25rem' }}>
+          <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-light)', marginBottom: '0.35rem' }}>
+            CLASS 3 STUDENTS
+          </div>
+          <div style={{ fontSize: '2rem', fontWeight: 900, color: '#059669' }}>
+            {mockAdmin.class3Students}
+          </div>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-light)' }}>
+            Standard 3 Active Cohort
+          </span>
+        </div>
+
+        <div className="card-base" style={{ padding: '1.25rem' }}>
+          <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-light)', marginBottom: '0.35rem' }}>
+            CLASS 4 STUDENTS
+          </div>
+          <div style={{ fontSize: '2rem', fontWeight: 900, color: '#D97706' }}>
+            {mockAdmin.class4Students}
+          </div>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-light)' }}>
+            Standard 4 Active Cohort
+          </span>
+        </div>
+
+        <div className="card-base" style={{ padding: '1.25rem' }}>
+          <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-light)', marginBottom: '0.35rem' }}>
+            CLASS 5 STUDENTS
+          </div>
+          <div style={{ fontSize: '2rem', fontWeight: 900, color: '#0D9488' }}>
+            {mockAdmin.class5Students || 94}
+          </div>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-light)' }}>
+            Standard 5 Active Cohort
+          </span>
+        </div>
+
+        <div className="card-base" style={{ padding: '1.25rem' }}>
+          <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-light)', marginBottom: '0.35rem' }}>
+            CLASS 6 STUDENTS
+          </div>
+          <div style={{ fontSize: '2rem', fontWeight: 900, color: '#10B981' }}>
+            {mockAdmin.class6Students || 88}
+          </div>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-light)' }}>
+            Standard 6 Active Cohort
+          </span>
+        </div>
+
+        <div className="card-base" style={{ padding: '1.25rem' }}>
+          <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-light)', marginBottom: '0.35rem' }}>
+            CLASS 7 STUDENTS
+          </div>
+          <div style={{ fontSize: '2rem', fontWeight: 900, color: '#4F46E5' }}>
+            {mockAdmin.class7Students || 82}
+          </div>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-light)' }}>
+            Standard 7 Active Cohort
+          </span>
+        </div>
+
+        <div className="card-base" style={{ padding: '1.25rem' }}>
+          <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-light)', marginBottom: '0.35rem' }}>
+            CLASS 8 STUDENTS
+          </div>
+          <div style={{ fontSize: '2rem', fontWeight: 900, color: '#E11D48' }}>
+            {mockAdmin.class8Students || 76}
+          </div>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-light)' }}>
+            Standard 8 Active Cohort
+          </span>
+        </div>
+
+        <div className="card-base" style={{ padding: '1.25rem' }}>
+          <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-light)', marginBottom: '0.35rem' }}>
+            TOTAL TEACHERS
           </div>
           <div style={{ fontSize: '2rem', fontWeight: 900, color: '#10B981' }}>
             {mockAdmin.totalTeachers}
           </div>
           <span style={{ fontSize: '0.8rem', color: 'var(--text-light)' }}>
-            STEM Mentors Active
+            STEM Mentors (Classes 1–8)
+          </span>
+        </div>
+
+        <div className="card-base" style={{ padding: '1.25rem' }}>
+          <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-light)', marginBottom: '0.35rem' }}>
+            AVAILABLE LESSONS
+          </div>
+          <div style={{ fontSize: '2rem', fontWeight: 900, color: '#F59E0B' }}>
+            {mockAdmin.availableLessons}
+          </div>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-light)' }}>
+            Classes 1 to 8 Combined
+          </span>
+        </div>
+
+        <div className="card-base" style={{ padding: '1.25rem' }}>
+          <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-light)', marginBottom: '0.35rem' }}>
+            COMPLETED LESSONS
+          </div>
+          <div style={{ fontSize: '2rem', fontWeight: 900, color: '#059669' }}>
+            {mockAdmin.completedLessons}
+          </div>
+          <span style={{ fontSize: '0.8rem', color: 'var(--success-green)', fontWeight: 700 }}>
+            +18% this month
+          </span>
+        </div>
+
+        <div className="card-base" style={{ padding: '1.25rem' }}>
+          <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-light)', marginBottom: '0.35rem' }}>
+            QUIZ ATTEMPTS
+          </div>
+          <div style={{ fontSize: '2rem', fontWeight: 900, color: '#EC4899' }}>
+            {mockAdmin.quizAttempts}
+          </div>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-light)' }}>
+            88% average score
           </span>
         </div>
       </div>
 
-      {/* Scalable Curriculum Architecture Overview */}
+      {/* Curriculum Hierarchy Architecture Diagram */}
       <div className="card-base" style={{ padding: '1.75rem', marginBottom: '2rem' }}>
         <h3 style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Layers size={22} color="var(--primary-blue)" /> Class 1–8 Roadmap Status
+          <Layers size={22} color="var(--primary-blue)" /> Scalable Curriculum Data Hierarchy
         </h3>
         <p style={{ fontSize: '0.95rem', color: 'var(--text-medium)', marginBottom: '1.5rem' }}>
-          RoboBox Learn’s modular architecture decouples the LMS engine from the curriculum content layer, allowing smooth rollout for Classes 2–8 without code changes.
+          The architecture organizes learning into nested modules so Classes 3–8 can be added with zero structural disruption:
         </p>
+
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '0.75rem',
+            backgroundColor: '#F8FAFC',
+            padding: '1.25rem',
+            borderRadius: 'var(--radius-lg)',
+            border: '2px dashed #CBD5E1'
+          }}
+        >
+          {[
+            { label: 'Class (Grade 1–8)', color: '#2563EB', icon: '🏫' },
+            { label: 'Chapter (Theme)', color: '#7C3AED', icon: '📖' },
+            { label: 'Lesson (Bite-sized)', color: '#059669', icon: '✏️' },
+            { label: 'Activity & Model', color: '#D97706', icon: '⚙️' },
+            { label: 'Quiz & Questions', color: '#DC2626', icon: '📝' }
+          ].map((node, i, arr) => (
+            <React.Fragment key={node.label}>
+              <div
+                style={{
+                  padding: '0.75rem 1.25rem',
+                  backgroundColor: '#FFFFFF',
+                  borderRadius: 'var(--radius-md)',
+                  border: `2px solid ${node.color}`,
+                  textAlign: 'center',
+                  boxShadow: 'var(--shadow-sm)'
+                }}
+              >
+                <div style={{ fontSize: '1.5rem' }}>{node.icon}</div>
+                <div style={{ fontWeight: 800, fontSize: '0.85rem', color: node.color, marginTop: '0.2rem' }}>
+                  {node.label}
+                </div>
+              </div>
+              {i < arr.length - 1 && (
+                <span style={{ fontSize: '1.5rem', color: '#94A3B8', fontWeight: 900 }}>➔</span>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+
+      {/* Class 1–8 Roadmap Grid */}
+      <div className="card-base" style={{ padding: '1.75rem' }}>
+        <h3 style={{ marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Layers size={22} color="var(--primary-blue)" /> All 8 Classes Roadmap Status
+        </h3>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
           {allClasses.map(cls => (
@@ -114,13 +272,14 @@ export const AdminDashboard: React.FC = () => {
               style={{
                 padding: '1.25rem',
                 borderRadius: 'var(--radius-lg)',
-                backgroundColor: cls.isActive ? '#EFF6FF' : '#F8FAFC',
-                border: `2px solid ${cls.isActive ? 'var(--primary-blue)' : 'var(--border-light)'}`,
+                backgroundColor: cls.isActive ? '#FFFFFF' : '#F8FAFC',
+                border: `2px solid ${cls.isActive ? cls.themeColor : 'var(--border-light)'}`,
+                boxShadow: cls.isActive ? 'var(--shadow-card-hover)' : 'none',
                 position: 'relative'
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                <span style={{ fontWeight: 900, color: cls.isActive ? 'var(--primary-blue)' : 'var(--text-dark)', fontSize: '1.1rem' }}>
+                <span style={{ fontWeight: 900, color: cls.isActive ? cls.themeColor : 'var(--text-dark)', fontSize: '1.1rem' }}>
                   {cls.title}
                 </span>
                 <span
@@ -131,7 +290,7 @@ export const AdminDashboard: React.FC = () => {
                     fontSize: '0.75rem'
                   }}
                 >
-                  {cls.isActive ? '● ACTIVE MVP' : '🔒 Coming Soon'}
+                  {cls.isActive ? '● LIVE & ACTIVE' : '🔒 Roadmap'}
                 </span>
               </div>
               <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-dark)', marginBottom: '0.35rem' }}>

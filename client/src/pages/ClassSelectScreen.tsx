@@ -31,7 +31,7 @@ export const ClassSelectScreen: React.FC<ClassSelectScreenProps> = ({ onClassSel
           Select Your Robotics Grade
         </h1>
         <p style={{ color: 'var(--text-medium)', fontSize: '1.1rem' }}>
-          Choose Class 1 to begin the official practical robotics textbook adventure! Classes 2–8 unlock on the school progression schedule.
+          Explore Class 1 through Class 8: the complete official RoboBox practical robotics textbook curriculum from foundational mechanics to capstone mechatronics!
         </p>
       </div>
 
@@ -45,7 +45,7 @@ export const ClassSelectScreen: React.FC<ClassSelectScreenProps> = ({ onClassSel
             style={{
               padding: '1.75rem',
               backgroundColor: cls.isActive ? '#FFFFFF' : '#F8FAFC',
-              border: cls.isActive ? '3px solid var(--primary-blue)' : '2px solid var(--border-light)',
+              border: cls.isActive ? `3px solid ${cls.themeColor}` : '2px solid var(--border-light)',
               borderRadius: 'var(--radius-xl)',
               cursor: cls.isActive ? 'pointer' : 'not-allowed',
               opacity: cls.isActive ? 1 : 0.75,
@@ -63,7 +63,7 @@ export const ClassSelectScreen: React.FC<ClassSelectScreenProps> = ({ onClassSel
                   style={{
                     fontSize: '1.5rem',
                     fontWeight: 900,
-                    color: cls.isActive ? 'var(--primary-blue)' : 'var(--text-light)'
+                    color: cls.isActive ? cls.themeColor : 'var(--text-light)'
                   }}
                 >
                   {cls.title}
@@ -94,8 +94,11 @@ export const ClassSelectScreen: React.FC<ClassSelectScreenProps> = ({ onClassSel
 
             {/* Action Button */}
             {cls.isActive ? (
-              <button className="btn-primary" style={{ width: '100%', gap: '0.5rem' }}>
-                <span>Enter Class 1</span>
+              <button
+                className="btn-primary"
+                style={{ width: '100%', gap: '0.5rem', backgroundColor: cls.themeColor }}
+              >
+                <span>Enter {cls.title}</span>
                 <ArrowRight size={18} />
               </button>
             ) : (

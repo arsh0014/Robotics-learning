@@ -36,7 +36,14 @@ export interface Lesson {
   subtitle?: string;
   summary: string;
   keyPoints: string[];
-  illustrationType: 'lego_intro' | 'lego_shapes' | 'lego_studs' | 'shapes_intro' | 'tangram_pieces' | 'tangram_patterns' | 'motor_intro' | 'wheel_intro' | 'motor_wheel_combo' | 'snow_intro' | 'elephant_toothpaste' | 'clay_intro' | 'diy_claw' | 'queaky_intro' | 'closed_circuit' | 'queaky_projects';
+  illustrationType: 
+    | 'lego_intro' | 'lego_shapes' | 'lego_studs' | 'shapes_intro' | 'tangram_pieces' | 'tangram_patterns' 
+    | 'motor_intro' | 'wheel_intro' | 'motor_wheel_combo' | 'snow_intro' | 'elephant_toothpaste' 
+    | 'clay_intro' | 'diy_claw' | 'queaky_intro' | 'closed_circuit' | 'queaky_projects'
+    | 'lego_wall_intro' | 'lego_wall_steps' | 'lego_wall_projects' | 'lego_benefits'
+    | 'tangram_symmetry' | 'tangram_puzzle' | 'tangram_cat' | 'battery_intro' | 'battery_types' | 'battery_uses'
+    | 'volcano_intro' | 'marble_run_intro' | 'solar_plane_intro' | 'hydraulic_lift_intro'
+    | 'queaky_intro_c2' | 'queaky_materials' | 'pencil_keyboard' | string;
   tryItAction?: {
     label: string;
     description: string;
@@ -47,7 +54,12 @@ export interface ActivityTask {
   id: string;
   chapterId: string;
   title: string;
-  type: 'lego_sorter' | 'lego_tree' | 'tangram_sandbox' | 'robot_circuit' | 'motor_runner' | 'robot_assembler' | 'snow_maker' | 'toothpaste_reaction' | 'claw_grabber' | 'marble_run' | 'queaky_synthesizer' | 'queaky_piano';
+  type: 
+    | 'lego_sorter' | 'lego_tree' | 'tangram_sandbox' | 'robot_circuit' | 'motor_runner' 
+    | 'robot_assembler' | 'snow_maker' | 'toothpaste_reaction' | 'claw_grabber' 
+    | 'marble_run' | 'queaky_synthesizer' | 'queaky_piano'
+    | 'lego_wall_builder' | 'tangram_cat_puzzle' | 'circuit_matcher' 
+    | 'volcano_simulator' | 'hydraulic_simulator' | 'solar_simulator' | 'wet_string_experiment' | string;
   description: string;
   materialsNeeded?: string[];
   instructions: string[];
@@ -94,7 +106,7 @@ export interface WrittenQuestion {
   id: string;
   chapterId: string;
   question: string;
-  placeholder: string;
+  placeholder?: string;
   sampleAnswer?: string;
 }
 
@@ -111,13 +123,16 @@ export interface Chapter {
   models: ModelProject[];
   quiz: QuizQuestion[];
   writtenQuestions: WrittenQuestion[];
+  shortQuestions?: WrittenQuestion[];
   funFacts: FunFact[];
 }
 
 export interface GlossaryTerm {
   term: string;
   definition: string;
-  chapterNumber: number;
+  chapterNumber?: number;
+  chapter?: string;
+  icon?: string;
   example?: string;
 }
 
