@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <circle cx="50" cy="50" r="48" fill="#2563EB"/>
+  <circle cx="50" cy="22" r="6" fill="#FBBF24"/>
+  <line x1="50" y1="28" x2="50" y2="38" stroke="#FBBF24" stroke-width="4" stroke-linecap="round"/>
+  <!-- Head -->
+  <rect x="25" y="38" width="50" height="42" rx="14" fill="#FDE047" stroke="#374151" stroke-width="3"/>
+  <!-- Big Friendly Eyes -->
+  <circle cx="38" cy="56" r="10" fill="#FFFFFF" stroke="#374151" stroke-width="2.5"/>
+  <circle cx="38" cy="56" r="5" fill="#1F2937"/>
+  <circle cx="36" cy="54" r="2" fill="#FFFFFF"/>
+  <circle cx="62" cy="56" r="10" fill="#FFFFFF" stroke="#374151" stroke-width="2.5"/>
+  <circle cx="62" cy="56" r="5" fill="#1F2937"/>
+  <circle cx="60" cy="54" r="2" fill="#FFFFFF"/>
+  <!-- Smile -->
+  <path d="M42 68 Q50 74 58 68" stroke="#374151" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <!-- Cheeks -->
+  <circle cx="30" cy="65" r="3" fill="#F87171" opacity="0.6"/>
+  <circle cx="70" cy="65" r="3" fill="#F87171" opacity="0.6"/>
+</svg>

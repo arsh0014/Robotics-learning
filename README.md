@@ -1,105 +1,99 @@
-# 🤖 RoboLearn - Robotics LMS for School Children
+# 🤖 RoboBox Learn – Interactive Robotics LMS (Class 1 MVP)
 
-**RoboLearn** is a responsive, child-friendly web-based Learning Management System (LMS) designed specifically for school kids from Primary School to Secondary School to learn Robotics concepts, components, sensors, motors, Arduino programming, and interactive robot models.
+> **Learn • Play • Build • Create**  
+> An interactive, child-friendly Learning Management System designed for primary school students learning robotics and STEM concepts, based directly on the official **Class 1 RoboBox Robotics & Innovation** textbook.
 
 ---
 
-## 🌟 Key Features
+## 🌟 Highlights & Features
 
-1. **🏠 Engaging Home Page**
-   - Welcoming hero banner with animated mascot *RoboBleep*.
-   - Interactive sections: *What is Robotics?*, *What You'll Learn*, *Robotics Models*, and *How RoboLearn Works*.
-   - Kid-friendly robotics fun facts carousel.
-
-2. **👤 Student Authentication & 1-Click Demo Mode**
-   - Simple login with Email / Student ID and Password.
-   - 1-Click **"Continue as Demo Student"** preloaded with Aarav Sharma (7th Grade - Middle School).
-   - Instant switcher for Ananya (Primary School - 3rd) and Kabir (Secondary School - 10th).
-
-3. **📊 Interactive Student Dashboard**
-   - Personalized greeting: *"Hi Aarav! 👋 Ready to learn something new?"*
-   - 4 Live Stat Cards: Learning Progress (%), Lessons Completed, Robotics Models Explored, Quiz Score Average.
-   - **Continue Learning** hero banner recommending next uncompleted lesson.
-   - Recent lessons list and daily learning streak counter (🔥).
-
-4. **📚 3 School Learning Levels**
-   - **🌱 Primary School (Grades 1-5 / Ages 6-10)**: Introduction to Robots, Parts of a Robot, Sensors (Eyes & Ears), Motors & Wheels, Everyday Robot Helpers.
-   - **⚡ Middle School (Grades 6-8 / Ages 11-13)**: How Robots Work (Sense-Think-Act), Sensors and Actuators, Arduino Basics (ATmega328P), Line Following Robot Architecture, Obstacle Avoiding Rover.
-   - **🧠 Secondary School (Grades 9-12 / Ages 14-18)**: Robotics Programming & Logic, Microcontroller Circuits & Motor Drivers (L298N), Autonomous Feedback & PID, Wireless Bluetooth Control, 4-DOF Robotic Arms.
-
-5. **📖 Step-by-Step Interactive Lesson Viewer**
-   - Short introduction, visual concept illustration, simple child-friendly explanation, *Did You Know?* callouts, important takeaways, real-world examples, and quick interactive mini-quizzes with instant feedback.
-   - Previous and Next Lesson buttons with completion celebration confetti.
-
-6. **🤖 6 Realistic Robotics Models Hub**
-   1. **Line Following Robot** (Infrared tracking & differential drive)
-   2. **Obstacle Avoiding Robot** (Ultrasonic radar distance sensing)
-   3. **Smart Touchless Dustbin** (Proximity sensor & SG90 servo lid)
-   4. **Bluetooth Controlled Car** (HC-05 serial wireless rover)
-   5. **4-DOF Robotic Arm** (Multi-joint articulated manipulator)
-   6. **Solar Eco-Rover** (Photovoltaic green energy & heliotropic sun tracking)
-
-7. **🧪 Live 2D Interactive Simulations**
-   - Real-time physics/sensor simulation widgets allowing kids to slide distances, adjust ultrasonic sensors, wave virtual hands, test gamepad controls, and adjust 4-axis robotic arm angles live in the browser!
-
-8. **⭐ Gamified Quiz System**
-   - Multi-choice quizzes with instant color-coded feedback and explanations.
-   - Score scorecard (e.g. 8/10, 100%) with celebratory sound effects and confetti.
-
-9. **🏆 Badges & Trophy Room**
-   - Unlockable achievements: *First Robot Explorer*, *Sensor Starter*, *Robotics Beginner*, *Quiz Champion*, *Model Explorer*, *Robotics Builder*.
-   - Live toast notifications when a new badge is unlocked!
-
-10. **📜 Printable Official Certificate of Achievement**
-    - High-resolution printable/downloadable *Junior Roboticist Certificate of Excellence* personalized with student name, class, and school level.
-
-11. **📱 Responsive Layout & Mobile Navigation**
-    - Desktop sticky top navbar + Mobile bottom navigation bar.
-    - Zero horizontal scrolling, fluid typography, large touch targets (min 48px), and adaptive cards.
+- **100% Official Curriculum Fidelity**: Faithful transcription of all 5 textbook chapters from the official Class 1 textbook (`Robobox Text book Std 1.pdf`), with original terminology, hands-on tasks, model instructions, and quiz questions:
+  1. **Chapter 1: LEGO Wall** (Blocks, classroom wall, shapes, studs & tubes locking mechanics, 6-step Giraffe model).
+  2. **Chapter 2: Tangram** (Geometric shapes, 7 magic tans, boat & cat patterns, Activity 1 Robot Circuit wiring).
+  3. **Chapter 3: Motors and Wheels (Cars)** (Kinetic DC motor motion, Activity 2 Robot Assembler, Blix Model 1 Cart, Model 2 Mudguard Car, Model 3 Roadster, and Paper Craft Machine gear train).
+  4. **Chapter 4: STEM Projects - I** (Dedicated STEM Lab: Snow Powder polymer expansion, Elephant Toothpaste reaction with Safety First notice, Clay powder sculpting, DIY Claw Grabber game, and Marble Run).
+  5. **Chapter 5: Queaky** (Musical sound detective, closed circuit principle, Fingertip/Plant/Water conduction, and Activity 4 Pencil Piano).
+- **Interactive Playgrounds & Sandboxes**:
+  - 🧱 **Virtual LEGO Wall & Color Sorter**: 8x6 baseplate builder and color tray sorting.
+  - 🔺 **7-Piece Tangram Playground**: Real geometric tan pieces with rotation and silhouette matching.
+  - ⚙️ **Kinetic Motor Simulator**: Live battery switch, forward/reverse gears, RPM slider, and Web Audio motor hum.
+  - 🧪 **STEM Lab Experiments**: Safe virtual simulations of instant snow, elephant toothpaste foam, and claw grabber mini-game.
+  - ⚡ **Queaky Synthesizer**: Real-time Web Audio circuit detector and 5-note graphite pencil piano.
+  - 🎨 **Student Digital Notebook**: Freehand canvas sketchpad and notes portfolio.
+  - 📖 **Official STEM Glossary**: Searchable 18-term textbook vocabulary with text-to-speech pronunciation.
+- **Child-Friendly Aesthetics**:
+  - Friendly yellow robot mascot with expressive speech bubbles.
+  - Rounded tactile cards and large touch-friendly buttons (min 48px).
+  - High-contrast, dyslexia-friendly typography (Google Fonts *Nunito* and *Outfit*).
+  - Built-in Text-to-Speech (TTS) audio read-aloud on lessons and questions.
+- **Multi-Role Portals**:
+  - 👧 **Student**: Visual winding learning path, XP rewards, daily streaks, level rank (*Junior Robot Explorer*), and badge shelf.
+  - 👩‍🏫 **Teacher**: Class cohort analytics, 24-student roster with search and report cards, and activity submission feed.
+  - 🛡️ **Admin**: System health, 8-class roadmap progression, and Supabase readiness.
+- **Scalable Architecture**: Flexible data schema structured for seamless rollout of Classes 2 through 8 without UI redesign.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React 18, Vite, Lucide Icons, Canvas Confetti, Vanilla CSS Design System with kid-friendly design tokens.
-- **Sound Effects**: Native Web Audio API synthesizer (beeps, chimes, fanfare — zero external audio dependencies).
-- **Backend**: Node.js, Express.js REST API with CORS.
-- **Database**: Supabase PostgreSQL schema with hybrid offline-first localStorage data service fallback.
+- **Frontend**: React 18 + TypeScript + Vite
+- **Styling**: Vanilla CSS with custom properties (`variables.css`, `base.css`, `components.css`)
+- **Icons**: Lucide React
+- **Celebration Effects**: Canvas Confetti
+- **Audio Synthesis**: Web Audio API + Web SpeechSynthesis API
 
 ---
 
-## 🚀 Quick Start Guide
+## 🚀 Getting Started
 
-### 1. Install Dependencies
+### 1. Clone the repository
 ```bash
-# In the project root
-npm --prefix client install
-npm --prefix server install
+git clone https://github.com/arsh0014/Robotics-learning.git
+cd Robotics-learning
 ```
 
-### 2. Start the Frontend Dev Server
+### 2. Install dependencies
 ```bash
-npm --prefix client run dev
+npm install
 ```
-Open [http://localhost:5173](http://localhost:5173) in your browser!
 
-### 3. (Optional) Start the Backend Server
+### 3. Run the development server
 ```bash
-npm --prefix server start
+npm run dev
 ```
-Express API will run on [http://localhost:5000](http://localhost:5000).
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### 4. Build for production
+```bash
+npm run build
+```
 
 ---
 
-## 🗄️ Supabase Database Setup (Optional)
+## 📂 Project Structure
 
-The application works 100% out of the box using the built-in offline-first data service. To connect a live Supabase database:
+```
+├── public/                 # Favicon and mascot SVG assets
+├── src/
+│   ├── types/              # Scalable TypeScript curriculum & progress models
+│   ├── data/               # Master registry for Classes 1-8 & mock profiles
+│   │   └── curriculum/     # Class 1 official textbook curriculum dataset
+│   ├── context/            # AuthContext & ProgressContext (XP, badges, state)
+│   ├── utils/              # Web Audio API synthesizer & speech synthesis
+│   ├── components/
+│   │   ├── common/         # Header, BottomNav, MascotAvatar, AudioReadAloud
+│   │   ├── student/        # JourneyMap, LessonViewer, ModelBuilder, QuizEngine
+│   │   │   └── interactive/# LEGO, Tangram, Motor, STEM Lab, Queaky, Notebook
+│   │   ├── teacher/        # Teacher Dashboard & student performance table
+│   │   └── admin/          # Admin Dashboard & 8-class expansion roadmap
+│   ├── pages/              # Welcome, RoleSelect, ClassSelect, Dashboard, Chapters...
+│   └── styles/             # Variables, typography, responsive component CSS
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
+```
 
-1. Create a project on [Supabase.com](https://supabase.com).
-2. Go to the **SQL Editor** in your Supabase dashboard and run the script found in:
-   [`supabase/schema.sql`](supabase/schema.sql)
-3. Set your environment keys in `client/.env` and `server/.env`:
-   ```env
-   VITE_SUPABASE_URL=https://your-project.supabase.co
-   VITE_SUPABASE_ANON_KEY=your-anon-key
-   ```
+---
+
+## 📜 License
+Educational project developed for the RoboBox Practical STEM Learning Ecosystem.

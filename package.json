@@ -1,17 +1,25 @@
 {
-  "name": "roblearn-lms",
-  "version": "1.0.0",
+  "name": "robobox-learn",
   "private": true,
-  "description": "RoboLearn - A child-friendly Robotics Learning Management System",
+  "version": "1.0.0",
+  "type": "module",
   "scripts": {
-    "install:all": "npm install && npm install --prefix client && npm install --prefix server",
-    "dev:client": "npm run dev --prefix client",
-    "dev:server": "npm run dev --prefix server",
-    "dev": "npm run dev --prefix client",
-    "build:client": "npm run build --prefix client",
-    "start:server": "npm start --prefix server"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
-  "keywords": ["robotics", "lms", "kids", "education", "arduino", "stem"],
-  "author": "RoboLearn Team",
-  "license": "MIT"
+  "dependencies": {
+    "canvas-confetti": "^1.9.4",
+    "lucide-react": "^1.16.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.1"
+  }
 }
