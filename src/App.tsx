@@ -42,6 +42,7 @@ export const App: React.FC = () => {
 
   // Navigation View - default directly to dashboard (no login required)
   const [currentView, setCurrentView] = useState<string>('dashboard');
+  const [previousView, setPreviousView] = useState<string>('dashboard');
 
   // Active Chapter ID for ChapterDetail view
   const [activeChapterId, setActiveChapterId] = useState<string>(() => {
@@ -55,6 +56,9 @@ export const App: React.FC = () => {
   });
 
   const handleNavigate = (view: string) => {
+    if (view !== currentView) {
+      setPreviousView(currentView);
+    }
     setCurrentView(view);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -79,6 +83,7 @@ export const App: React.FC = () => {
   if (currentView === 'role_select') {
     return (
       <RoleSelectScreen
+        onBack={() => handleNavigate(previousView)}
         onRoleSelected={() => {
           if (role === 'teacher' || role === 'admin') {
             handleNavigate('dashboard');
@@ -95,6 +100,7 @@ export const App: React.FC = () => {
     return (
       <ClassSelectScreen
         onClassSelected={() => handleNavigate('dashboard')}
+        onBack={() => handleNavigate(previousView)}
       />
     );
   }
