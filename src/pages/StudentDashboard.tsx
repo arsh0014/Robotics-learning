@@ -5,7 +5,7 @@ import { getChaptersForClass, getBadgesForClass } from '../data';
 import { JourneyMap } from '../components/student/JourneyMap';
 import { MascotAvatar } from '../components/common/MascotAvatar';
 import { sound } from '../utils/audio';
-import { Play, BookOpen, Puzzle, Cog, CheckSquare, FlaskConical, Edit3, ArrowRight } from 'lucide-react';
+import { Play, BookOpen, Puzzle, Cog, CheckSquare, FlaskConical, Edit3, ArrowRight, Lock } from 'lucide-react';
 
 interface StudentDashboardProps {
   onSelectChapter: (chapterId: string) => void;
@@ -14,7 +14,7 @@ interface StudentDashboardProps {
 
 export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onSelectChapter, onNavigate }) => {
   const { currentStudent, selectedClassId, setSelectedClassId } = useAuth();
-  const { progress, overallClassProgress, unlockedBadgeObjects } = useProgress();
+  const { progress, overallClassProgress, unlockedBadgeObjects, isClassUnlocked } = useProgress();
 
   const activeClassId = selectedClassId || 'class-1';
   const isClass2 = activeClassId === 'class-2';
@@ -80,6 +80,10 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onSelectChap
 
   const handleSwitchClass = (classId: string) => {
     if (classId !== activeClassId) {
+      if (!isClassUnlocked(classId)) {
+        sound.playTryAgain();
+        return;
+      }
       sound.playSuccess();
       setSelectedClassId(classId);
     }
@@ -101,26 +105,36 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onSelectChap
               { id: 'class-6', label: 'Class 6', color: '#10B981' },
               { id: 'class-7', label: 'Class 7', color: '#4F46E5' },
               { id: 'class-8', label: 'Class 8', color: '#E11D48' }
-            ].map(item => (
-              <button
+            ].map(item => {
+              const isUnlocked = isClassUnlocked(item.id);
+
+              return (
+                <button
                 key={item.id}
                 onClick={() => handleSwitchClass(item.id)}
+                disabled={!isUnlocked}
+                title={isUnlocked ? item.label : 'Complete the previous class final quiz with 75% or more to unlock'}
                 style={{
                   padding: '0.4rem 0.85rem',
                   borderRadius: 'var(--radius-md)',
                   fontSize: '0.8rem',
                   fontWeight: 800,
                   border: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.3rem',
                   backgroundColor: activeClassId === item.id ? item.color : 'transparent',
-                  color: activeClassId === item.id ? '#FFFFFF' : 'var(--text-medium)',
-                  cursor: 'pointer',
+                  color: activeClassId === item.id ? '#FFFFFF' : isUnlocked ? 'var(--text-medium)' : 'var(--text-light)',
+                  cursor: isUnlocked ? 'pointer' : 'not-allowed',
+                  opacity: isUnlocked ? 1 : 0.55,
                   transition: 'all 0.2s ease',
                   boxShadow: activeClassId === item.id ? `0 2px 6px ${item.color}40` : 'none'
                 }}
               >
-                {item.label}
+                {!isUnlocked && <Lock size={13} />} {item.label}
               </button>
-            ))}
+              );
+            })}
           </div>
         </div>
 

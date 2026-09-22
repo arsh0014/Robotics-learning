@@ -22,7 +22,8 @@ export const ProgressPage: React.FC = () => {
     progress,
     getClassProgress,
     getClassCompletedCount,
-    getChapterProgress
+    getChapterProgress,
+    isClassUnlocked
   } = useProgress();
 
   const [activeTab, setActiveTab] = useState<ClassTab>((selectedClassId as ClassTab) || 'class-1');
@@ -54,6 +55,10 @@ export const ProgressPage: React.FC = () => {
   const tabColor = currentTabConfig.color;
 
   const handleSwitchTab = (tab: ClassTab) => {
+    if (!isClassUnlocked(tab)) {
+      sound.playTryAgain();
+      return;
+    }
     sound.playClick();
     setActiveTab(tab);
     setSelectedClassId(tab);
@@ -79,15 +84,20 @@ export const ProgressPage: React.FC = () => {
         {classTabs.map(tab => {
           const prog = getClassProgress(tab.id);
           const isSelected = activeTab === tab.id;
+          const isUnlocked = isClassUnlocked(tab.id);
           return (
             <button
               key={tab.id}
               className={isSelected ? 'btn-primary' : 'btn-secondary'}
               onClick={() => handleSwitchTab(tab.id)}
+              disabled={!isUnlocked}
+              title={isUnlocked ? tab.title : 'Complete the previous class final quiz with 75% or more to unlock'}
               style={{
                 padding: '0.55rem 1.1rem',
                 fontSize: '0.9rem',
                 gap: '0.4rem',
+                opacity: isUnlocked ? 1 : 0.55,
+                cursor: isUnlocked ? 'pointer' : 'not-allowed',
                 backgroundColor: isSelected ? tab.color : undefined,
                 borderColor: isSelected ? tab.color : undefined
               }}

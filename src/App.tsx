@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from './context/AuthContext';
+import { useProgress } from './context/ProgressContext';
 import { Header } from './components/common/Header';
 import { BottomNav } from './components/common/BottomNav';
 import { WelcomeScreen } from './pages/WelcomeScreen';
@@ -31,7 +32,8 @@ import { PythonStudio } from './components/class8/PythonStudio';
 import { StudentNotebook } from './components/student/interactive/StudentNotebook';
 
 export const App: React.FC = () => {
-  const { role, selectedClassId, loginAsStudent } = useAuth();
+  const { role, selectedClassId, setSelectedClassId, loginAsStudent } = useAuth();
+  const { isClassUnlocked } = useProgress();
   const isClass2 = selectedClassId === 'class-2';
   const isClass3 = selectedClassId === 'class-3';
   const isClass4 = selectedClassId === 'class-4';
@@ -43,6 +45,12 @@ export const App: React.FC = () => {
   // Always greet visitors on the landing page before they enter a learning portal.
   const [currentView, setCurrentView] = useState<string>('welcome');
   const [previousView, setPreviousView] = useState<string>('welcome');
+
+  useEffect(() => {
+    if (role === 'student' && !isClassUnlocked(selectedClassId)) {
+      setSelectedClassId('class-1');
+    }
+  }, [role, selectedClassId, setSelectedClassId, isClassUnlocked]);
 
   // Active Chapter ID for ChapterDetail view
   const [activeChapterId, setActiveChapterId] = useState<string>(() => {
