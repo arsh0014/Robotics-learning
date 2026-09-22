@@ -1,5 +1,4 @@
 import React from 'react';
-import { mockTeachersByClass } from '../../data/mockUsers';
 import { useAuth } from '../../context/AuthContext';
 import { getChaptersForClass } from '../../data';
 import { sound } from '../../utils/audio';
@@ -20,7 +19,6 @@ export const TeacherDashboard: React.FC = () => {
   const selectedClassId: ClassId = classes.some((item) => item.id === activeClassId)
     ? activeClassId as ClassId
     : 'class-1';
-  const teacher = mockTeachersByClass[selectedClassId] || mockTeachersByClass['class-1'];
   const chapters = getChaptersForClass(selectedClassId);
   const selectedClass = classes.find((item) => item.id === selectedClassId)!;
 
@@ -31,7 +29,6 @@ export const TeacherDashboard: React.FC = () => {
         {classes.map((item) => <button key={item.id} onClick={() => { sound.playClick(); setSelectedClassId(item.id); }} style={{ padding: '0.45rem 0.9rem', borderRadius: 'var(--radius-md)', border: 'none', fontWeight: 800, fontSize: '0.85rem', backgroundColor: selectedClassId === item.id ? item.color : 'transparent', color: selectedClassId === item.id ? '#FFFFFF' : 'var(--text-medium)', cursor: 'pointer' }}>{item.label}</button>)}
       </div>
     </div>
-    <div className="card-base" style={{ padding: '1.75rem', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1.25rem', background: '#F8FAFC' }}><div style={{ fontSize: '3rem', background: '#FFFFFF', padding: '0.5rem', borderRadius: '50%', boxShadow: 'var(--shadow-sm)' }}>{teacher.avatar}</div><div><h2 style={{ fontSize: '1.5rem', color: 'var(--text-dark)' }}>{teacher.name}</h2><p style={{ color: 'var(--text-medium)', marginTop: '0.2rem' }}>{teacher.school} • {teacher.assignedClass}</p></div></div>
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.25rem', marginBottom: '2rem' }}>
       <div className="card-base" style={{ padding: '1.5rem' }}><BookOpen size={24} color={selectedClass.color} /><h3 style={{ marginTop: '0.8rem' }}>Lesson Plan</h3><p style={{ color: 'var(--text-medium)', fontSize: '0.9rem' }}>{chapters.length} curriculum chapters are available for {selectedClass.label}.</p></div>
       <div className="card-base" style={{ padding: '1.5rem' }}><ClipboardCheck size={24} color="#10B981" /><h3 style={{ marginTop: '0.8rem' }}>Activities & Assessments</h3><p style={{ color: 'var(--text-medium)', fontSize: '0.9rem' }}>Review textbook activities, models, and quiz material.</p></div>
