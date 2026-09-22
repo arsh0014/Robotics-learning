@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
-import { class1Chapters } from '../data/curriculum/class1';
-import { class2Chapters } from '../data/curriculum/class2';
-import { class3Chapters } from '../data/curriculum/class3';
-import { class4Chapters } from '../data/curriculum/class4';
+import {
+  class1Chapters,
+  class2Chapters,
+  class3Chapters,
+  class4Chapters,
+  class5Chapters,
+  class6Chapters,
+  class7Chapters,
+  class8Chapters,
+  getChaptersForClass
+} from '../data';
 import { useProgress } from '../context/ProgressContext';
 import { LessonViewer } from '../components/student/LessonViewer';
 import { ModelBuilder } from '../components/student/ModelBuilder';
@@ -32,6 +39,14 @@ import { MegastructureStudio } from '../components/class4/MegastructureStudio';
 import { CircuitLab } from '../components/class4/CircuitLab';
 import { LogicGatesWaterAlarm } from '../components/class4/LogicGatesWaterAlarm';
 import { PictoBloxStudio } from '../components/class4/PictoBloxStudio';
+import { Class5StemLab } from '../components/class5/Class5StemLab';
+import { TinkercadStudio } from '../components/class5/TinkercadStudio';
+import { Class6StemLab } from '../components/class6/Class6StemLab';
+import { MitAppInventorStudio } from '../components/class6/MitAppInventorStudio';
+import { Class7StemLab } from '../components/class7/Class7StemLab';
+import { CppStudio } from '../components/class7/CppStudio';
+import { Class8StemLab } from '../components/class8/Class8StemLab';
+import { PythonStudio } from '../components/class8/PythonStudio';
 import { sound } from '../utils/audio';
 import { BookOpen, Puzzle, Cog, CheckSquare, Edit, Lightbulb, ArrowLeft, CheckCircle2, Sparkles } from 'lucide-react';
 
@@ -42,7 +57,16 @@ interface ChapterDetailProps {
 }
 
 export const ChapterDetail: React.FC<ChapterDetailProps> = ({ chapterId, onBack, onNextChapter }) => {
-  const allChapters = [...class1Chapters, ...class2Chapters, ...class3Chapters, ...class4Chapters];
+  const allChapters = [
+    ...class1Chapters,
+    ...class2Chapters,
+    ...class3Chapters,
+    ...class4Chapters,
+    ...class5Chapters,
+    ...class6Chapters,
+    ...class7Chapters,
+    ...class8Chapters
+  ];
   const chapter = allChapters.find(c => c.id === chapterId) || allChapters[0];
   const { getChapterProgress, isChapterCompleted } = useProgress();
 
@@ -53,11 +77,7 @@ export const ChapterDetail: React.FC<ChapterDetailProps> = ({ chapterId, onBack,
   const isDone = isChapterCompleted(chapter.id);
 
   // Determine next chapter within the same class
-  const classChapters =
-    chapter.classId === 'class-4' ? class4Chapters :
-    chapter.classId === 'class-3' ? class3Chapters :
-    chapter.classId === 'class-2' ? class2Chapters :
-    class1Chapters;
+  const classChapters = getChaptersForClass(chapter.classId);
   const currentIndex = classChapters.findIndex(c => c.id === chapter.id);
   const nextChapter = classChapters[currentIndex + 1];
 
@@ -223,6 +243,18 @@ export const ChapterDetail: React.FC<ChapterDetailProps> = ({ chapterId, onBack,
             {chapter.id === 'c4-ch-5' && <CircuitLab />}
             {chapter.id === 'c4-ch-6' && <LogicGatesWaterAlarm />}
             {chapter.id === 'c4-ch-7' && <PictoBloxStudio />}
+
+            {/* Class 5 Activities */}
+            {chapter.classId === 'class-5' && (chapter.id === 'c5-ch-7' ? <TinkercadStudio onBack={onBack} /> : <Class5StemLab onBack={onBack} />)}
+
+            {/* Class 6 Activities */}
+            {chapter.classId === 'class-6' && (chapter.id === 'c6-ch-7' ? <MitAppInventorStudio /> : <Class6StemLab />)}
+
+            {/* Class 7 Activities */}
+            {chapter.classId === 'class-7' && (chapter.id === 'c7-ch-7' ? <CppStudio /> : <Class7StemLab />)}
+
+            {/* Class 8 Activities */}
+            {chapter.classId === 'class-8' && (chapter.id === 'c8-ch-7' ? <PythonStudio /> : <Class8StemLab />)}
           </div>
         )}
 

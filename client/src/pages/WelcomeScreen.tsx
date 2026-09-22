@@ -54,7 +54,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStartLearning, o
 
         {/* Main Title */}
         <h1 style={{ fontSize: '3rem', fontWeight: 900, color: 'var(--primary-blue)', letterSpacing: '-0.03em', marginBottom: '0.5rem' }}>
-          ROBOBOX LEARN
+          ROBO LAB LMS
         </h1>
 
         <h2 style={{ fontSize: '1.65rem', fontWeight: 700, color: 'var(--text-dark)', marginBottom: '1.25rem' }}>

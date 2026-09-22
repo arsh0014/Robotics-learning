@@ -2,15 +2,18 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { mockStudents } from '../data/mockUsers';
 import { sound } from '../utils/audio';
-import { GraduationCap, BookOpen, Shield, ArrowRight, Sparkles } from 'lucide-react';
+import { GraduationCap, BookOpen, Shield, ArrowRight, ArrowLeft, Sparkles, ChevronDown } from 'lucide-react';
 
 interface RoleSelectScreenProps {
   onRoleSelected: () => void;
+  onBack: () => void;
 }
 
-export const RoleSelectScreen: React.FC<RoleSelectScreenProps> = ({ onRoleSelected }) => {
-  const { setRole, loginAsStudent } = useAuth();
-  const [selectedStudentId, setSelectedStudentId] = useState(mockStudents[0].id);
+export const RoleSelectScreen: React.FC<RoleSelectScreenProps> = ({ onRoleSelected, onBack }) => {
+  const { setRole, loginAsStudent, currentStudent } = useAuth();
+  const [selectedStudentId, setSelectedStudentId] = useState(currentStudent?.id || mockStudents[0].id);
+  const [isStudentDropdownOpen, setIsStudentDropdownOpen] = useState(false);
+  const selectedStudent = mockStudents.find((student) => student.id === selectedStudentId) || mockStudents[0];
 
   const handleSelectStudent = (id: string) => {
     sound.playClick();
@@ -32,7 +35,16 @@ export const RoleSelectScreen: React.FC<RoleSelectScreenProps> = ({ onRoleSelect
   };
 
   return (
-    <div style={{ minHeight: '90vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem 1.25rem' }}>
+    <div style={{ minHeight: '90vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem 1.25rem', position: 'relative' }}>
+      <button
+        type="button"
+        className="btn-secondary"
+        onClick={onBack}
+        style={{ position: 'absolute', top: '1.5rem', left: '1.5rem', gap: '0.4rem', padding: '0.55rem 0.85rem' }}
+      >
+        <ArrowLeft size={17} />
+        Back
+      </button>
       <div className="container" style={{ maxWidth: '850px', textAlign: 'center' }}>
         <div style={{ marginBottom: '0.75rem' }}>
           <span className="badge-tag" style={{ backgroundColor: '#EFF6FF', color: 'var(--primary-blue)' }}>
@@ -89,40 +101,93 @@ export const RoleSelectScreen: React.FC<RoleSelectScreenProps> = ({ onRoleSelect
               Learn lessons, build models, run motors, and earn badges!
             </p>
 
-            {/* Quick Student Switcher */}
+            {/* Student Profile Dropdown */}
             <div style={{ marginBottom: '1.25rem' }}>
               <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-light)', marginBottom: '0.5rem' }}>
                 CHOOSE STUDENT PROFILE:
               </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', justifyContent: 'center' }}>
-                {mockStudents.map(st => (
-                  <button
-                    key={st.id}
-                    onClick={() => {
-                      sound.playClick();
-                      setSelectedStudentId(st.id);
-                    }}
+              <div style={{ position: 'relative' }}>
+                <button
+                  type="button"
+                  aria-haspopup="listbox"
+                  aria-expanded={isStudentDropdownOpen}
+                  onClick={() => setIsStudentDropdownOpen((isOpen) => !isOpen)}
+                  style={{
+                    width: '100%',
+                    minHeight: '2.55rem',
+                    padding: '0.5rem 0.7rem',
+                    borderRadius: 'var(--radius-md)',
+                    backgroundColor: '#FFFFFF',
+                    color: 'var(--text-dark)',
+                    border: '1px solid #CBD5E1',
+                    fontSize: '0.88rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    textAlign: 'left'
+                  }}
+                >
+                  <span>{selectedStudent.avatar} {selectedStudent.name}</span>
+                  <ChevronDown size={17} aria-hidden="true" />
+                </button>
+
+                {isStudentDropdownOpen && (
+                  <div
+                    role="listbox"
+                    aria-label="Student profiles"
                     style={{
-                      padding: '0.3rem 0.65rem',
-                      borderRadius: 'var(--radius-full)',
-                      backgroundColor: selectedStudentId === st.id ? 'var(--primary-blue)' : '#FFFFFF',
-                      color: selectedStudentId === st.id ? '#FFFFFF' : 'var(--text-dark)',
+                      position: 'absolute',
+                      top: 'calc(100% + 0.3rem)',
+                      left: 0,
+                      right: 0,
+                      zIndex: 10,
+                      maxHeight: '190px',
+                      overflowY: 'auto',
+                      padding: '0.25rem',
+                      borderRadius: 'var(--radius-md)',
+                      backgroundColor: '#FFFFFF',
                       border: '1px solid #CBD5E1',
-                      fontSize: '0.85rem',
-                      fontWeight: 700,
-                      cursor: 'pointer'
+                      boxShadow: 'var(--shadow-lg)'
                     }}
                   >
-                    <span>{st.avatar}</span> {st.name}
-                  </button>
-                ))}
+                    {mockStudents.map((student) => (
+                      <button
+                        type="button"
+                        key={student.id}
+                        role="option"
+                        aria-selected={student.id === selectedStudentId}
+                        onClick={() => {
+                          sound.playClick();
+                          setSelectedStudentId(student.id);
+                          setIsStudentDropdownOpen(false);
+                        }}
+                        style={{
+                          width: '100%',
+                          padding: '0.45rem 0.55rem',
+                          border: 'none',
+                          borderRadius: '0.4rem',
+                          backgroundColor: student.id === selectedStudentId ? '#DBEAFE' : 'transparent',
+                          color: 'var(--text-dark)',
+                          fontSize: '0.85rem',
+                          fontWeight: student.id === selectedStudentId ? 800 : 600,
+                          cursor: 'pointer',
+                          textAlign: 'left'
+                        }}
+                      >
+                        {student.avatar} {student.name}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
             <button
               className="btn-primary"
               onClick={() => handleSelectStudent(selectedStudentId)}
-              style={{ width: '100%', gap: '0.5rem' }}
+              style={{ width: '100%', gap: '0.5rem', whiteSpace: 'nowrap', fontSize: '0.9rem' }}
             >
               <span>Enter as Student</span>
               <ArrowRight size={18} />

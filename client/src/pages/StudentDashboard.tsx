@@ -446,10 +446,10 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onSelectChap
           </div>
           <button
             className="btn-secondary"
-            onClick={() => onNavigate('achievements')}
+            onClick={() => onNavigate('progress')}
             style={{ padding: '0.4rem 0.9rem', fontSize: '0.85rem' }}
           >
-            View All Badges
+            View Progress
           </button>
         </div>
 
