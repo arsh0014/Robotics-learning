@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { useProgress } from '../../context/ProgressContext';
 import { Sparkles, Flame, LogOut } from 'lucide-react';
+import { useProgress } from '../../context/ProgressContext';
 import { sound } from '../../utils/audio';
 
 interface HeaderProps {
@@ -10,7 +10,7 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ onNavigate, activeView: _activeView }) => {
-  const { role, currentStudent, selectedClassId, setSelectedClassId, setRole, logout } = useAuth();
+  const { role, currentStudent, selectedClassId, setSelectedClassId, logout } = useAuth();
   const { progress } = useProgress();
 
   const toggleClass = (e: React.MouseEvent) => {
@@ -90,7 +90,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, activeView: _activeV
 
         {/* Right Actions */}
         <div className="header-actions">
-          {role === 'student' && (
+          {false && role === 'student' && (
             <>
               {/* XP Counter */}
               <div 
@@ -133,13 +133,6 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, activeView: _activeV
               <span className="badge-tag" style={{ backgroundColor: '#EDE9FE', color: '#6D28D9' }}>
                 👩‍🏫 Teacher Mode
               </span>
-              <button
-                className="btn-secondary"
-                style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}
-                onClick={() => setRole('student')}
-              >
-                Switch to Student
-              </button>
             </div>
           )}
 
@@ -148,13 +141,6 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, activeView: _activeV
               <span className="badge-tag" style={{ backgroundColor: '#FEF3C7', color: '#B45309' }}>
                 🛡️ Admin Mode
               </span>
-              <button
-                className="btn-secondary"
-                style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}
-                onClick={() => setRole('student')}
-              >
-                Switch to Student
-              </button>
             </div>
           )}
 

@@ -134,8 +134,8 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onSelectChap
         </button>
       </div>
 
-      {/* Top Welcome Hero Banner */}
-      <div
+      {/* Hidden welcome summary: the dashboard starts directly with learning activities. */}
+      {false && (<div
         className="card-base"
         style={{
           padding: '2rem 2.5rem',
@@ -295,7 +295,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onSelectChap
             />
           </div>
         </div>
-      </div>
+      </div>)}
 
       {/* Quick Access Activity Cards Grid */}
       <div style={{ marginBottom: '2.5rem' }}>

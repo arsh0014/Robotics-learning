@@ -31,7 +31,7 @@ import { PythonStudio } from './components/class8/PythonStudio';
 import { StudentNotebook } from './components/student/interactive/StudentNotebook';
 
 export const App: React.FC = () => {
-  const { role, selectedClassId } = useAuth();
+  const { role, selectedClassId, loginAsStudent } = useAuth();
   const isClass2 = selectedClassId === 'class-2';
   const isClass3 = selectedClassId === 'class-3';
   const isClass4 = selectedClassId === 'class-4';
@@ -73,7 +73,10 @@ export const App: React.FC = () => {
   if (currentView === 'welcome') {
     return (
       <WelcomeScreen
-        onStartLearning={() => handleNavigate('role_select')}
+        onStartLearning={() => {
+          loginAsStudent();
+          handleNavigate('class_select');
+        }}
         onLogin={() => handleNavigate('role_select')}
       />
     );

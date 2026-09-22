@@ -44,7 +44,7 @@ export const ClassSelectScreen: React.FC<ClassSelectScreenProps> = ({ onClassSel
           Select Your Robotics Grade
         </h1>
         <p style={{ color: 'var(--text-medium)', fontSize: '1.1rem' }}>
-          Explore Class 1 through Class 8: the complete official RoboBox practical robotics textbook curriculum from foundational mechanics to capstone mechatronics!
+          Choose your class and start learning robotics through fun lessons, hands-on activities, exciting models, and creative challenges!
         </p>
       </div>
 

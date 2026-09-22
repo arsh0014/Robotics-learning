@@ -92,7 +92,17 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStartLearning, o
           </button>
         </div>
 
-        {/* Footnote */}
+        {/* Sponsor / implementing agency */}
+        <div style={{ marginTop: '2.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.65rem' }}>
+          <div style={{ width: 76, height: 64, overflow: 'hidden', borderRadius: '0.6rem', background: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <img src="/sarva-hitam-logo.png" alt="Sarva Hitam Manav Seva Sansthan logo" style={{ width: 118, maxWidth: 'none', transform: 'translateY(-2px)' }} />
+          </div>
+          <div style={{ fontSize: '0.82rem', color: 'var(--text-light)', textAlign: 'center' }}>
+            Sponsor / Implementing Agency: <strong style={{ color: 'var(--text-medium)' }}>Sarva Hitam Manav Seva Sansthan (SHMSS)</strong>
+          </div>
+        </div>
+
+        {/* Curriculum footnote */}
         <div style={{ marginTop: '3.5rem', fontSize: '0.85rem', color: 'var(--text-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
           <ShieldCheck size={16} color="var(--success-green)" />
           <span>Official RoboBox Practical STEM Curriculum • Standard 1</span>
