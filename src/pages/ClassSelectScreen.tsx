@@ -98,7 +98,7 @@ export const ClassSelectScreen: React.FC<ClassSelectScreenProps> = ({ onClassSel
               </div>
 
               <div style={{ fontSize: '0.85rem', color: 'var(--text-light)', fontWeight: 700, marginBottom: '0.85rem' }}>
-                {cls.ageGroup} • {cls.totalChapters} Chapters
+                {cls.totalChapters} Chapters
               </div>
 
               <p style={{
@@ -190,7 +190,7 @@ export const ClassSelectScreen: React.FC<ClassSelectScreenProps> = ({ onClassSel
               <div>
                 <h2 id="class-details-title" style={{ color: detailsClass.themeColor, marginBottom: '0.25rem' }}>{detailsClass.title}</h2>
                 <div style={{ color: 'var(--text-light)', fontWeight: 700, fontSize: '0.9rem' }}>
-                  {detailsClass.ageGroup} • {detailsClass.totalChapters} Chapters
+                  {detailsClass.totalChapters} Chapters
                 </div>
               </div>
               <button

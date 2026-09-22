@@ -1,20 +1,32 @@
 import React, { useState } from 'react';
-import { class1Glossary } from '../data/curriculum/class1';
-import { class2Glossary } from '../data/curriculum/class2';
-import { class3Glossary } from '../data/curriculum/class3';
-import { class4Glossary } from '../data/curriculum/class4';
+import {
+  class1Glossary,
+  class2Glossary,
+  class3Glossary,
+  class4Glossary,
+  class5Glossary,
+  class6Glossary,
+  class7Glossary,
+  class8Glossary
+} from '../data';
 import { useAuth } from '../context/AuthContext';
 import { AudioReadAloud } from '../components/common/AudioReadAloud';
 import { sound } from '../utils/audio';
 import { Search, BookOpen, Sparkles } from 'lucide-react';
 
+type ClassTab = 'class-1' | 'class-2' | 'class-3' | 'class-4' | 'class-5' | 'class-6' | 'class-7' | 'class-8';
+
 export const GlossaryPage: React.FC = () => {
   const { selectedClassId } = useAuth();
-  const [activeClass, setActiveClass] = useState<'class-1' | 'class-2' | 'class-3' | 'class-4'>((selectedClassId as any) || 'class-4');
+  const [activeClass, setActiveClass] = useState<ClassTab>((selectedClassId as ClassTab) || 'class-1');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedChapter, setSelectedChapter] = useState<number | 'all'>('all');
 
   const terms =
+    activeClass === 'class-8' ? class8Glossary :
+    activeClass === 'class-7' ? class7Glossary :
+    activeClass === 'class-6' ? class6Glossary :
+    activeClass === 'class-5' ? class5Glossary :
     activeClass === 'class-4' ? class4Glossary :
     activeClass === 'class-3' ? class3Glossary :
     activeClass === 'class-2' ? class2Glossary :
@@ -46,134 +58,151 @@ export const GlossaryPage: React.FC = () => {
     return matchesSearch && matchesChapter;
   });
 
-  const handleClassChange = (cId: 'class-1' | 'class-2' | 'class-3' | 'class-4') => {
+  const handleClassChange = (cId: ClassTab) => {
     sound.playClick();
     setActiveClass(cId);
     setSelectedChapter('all');
   };
 
-  const chapterChips = activeClass === 'class-4'
-    ? [
-        { id: 'all' as const, label: 'All Words (58)' },
-        { id: 1 as const, label: 'Ch 1 Humanoid' },
-        { id: 2 as const, label: 'Ch 2 3D Pen' },
-        { id: 3 as const, label: 'Ch 3 Gears' },
-        { id: 4 as const, label: 'Ch 4 Structures' },
-        { id: 5 as const, label: 'Ch 5 Electro I' },
-        { id: 6 as const, label: 'Ch 6 Electro II' },
-        { id: 7 as const, label: 'Ch 7 PictoBlox' }
-      ]
-    : activeClass === 'class-3'
-    ? [
-        { id: 'all' as const, label: 'All Words (34)' },
-        { id: 1 as const, label: 'Ch 1 Mechanics' },
-        { id: 2 as const, label: 'Ch 2 3D Pen' },
-        { id: 3 as const, label: 'Ch 3 Battery' },
-        { id: 4 as const, label: 'Ch 4 Waving Bot' },
-        { id: 5 as const, label: 'Ch 5 Crawlers' },
-        { id: 6 as const, label: 'Ch 6 Gears' },
-        { id: 7 as const, label: 'Ch 7 Scratch' }
-      ]
-    : activeClass === 'class-2'
-    ? [
-        { id: 'all' as const, label: 'All Words' },
-        { id: 1 as const, label: 'Ch 1 LEGO' },
-        { id: 2 as const, label: 'Ch 2 Tangram' },
-        { id: 3 as const, label: 'Ch 3 Battery' },
-        { id: 4 as const, label: 'Ch 4 STEM' },
-        { id: 5 as const, label: 'Ch 5 Queaky' }
-      ]
-    : [
-        { id: 'all' as const, label: 'All Words' },
-        { id: 1 as const, label: 'Ch 1 LEGO' },
-        { id: 2 as const, label: 'Ch 2 Shapes' },
-        { id: 3 as const, label: 'Ch 3 Motors' },
-        { id: 4 as const, label: 'Ch 4 STEM' },
-        { id: 5 as const, label: 'Ch 5 Queaky' }
-      ];
+  const getChapterChips = () => {
+    switch (activeClass) {
+      case 'class-8':
+        return [
+          { id: 'all' as const, label: `All Words (${class8Glossary.length})` },
+          { id: 1 as const, label: 'Ch 1 Mechatronics' },
+          { id: 2 as const, label: 'Ch 2 ESP IoT' },
+          { id: 3 as const, label: 'Ch 3 Sumo Bots' },
+          { id: 4 as const, label: 'Ch 4 Bionic Hand' },
+          { id: 5 as const, label: 'Ch 5 Drones' },
+          { id: 6 as const, label: 'Ch 6 Prototyping' },
+          { id: 7 as const, label: 'Ch 7 Python' }
+        ];
+      case 'class-7':
+        return [
+          { id: 'all' as const, label: `All Words (${class7Glossary.length})` },
+          { id: 1 as const, label: 'Ch 1 Automation' },
+          { id: 2 as const, label: 'Ch 2 Arduino' },
+          { id: 3 as const, label: 'Ch 3 Gesture' },
+          { id: 4 as const, label: 'Ch 4 Obstacle Avoider' },
+          { id: 5 as const, label: 'Ch 5 Aviation' },
+          { id: 6 as const, label: 'Ch 6 3D Printing' },
+          { id: 7 as const, label: 'Ch 7 C/C++' }
+        ];
+      case 'class-6':
+        return [
+          { id: 'all' as const, label: `All Words (${class6Glossary.length})` },
+          { id: 1 as const, label: 'Ch 1 Innovation' },
+          { id: 2 as const, label: 'Ch 2 Microcontroller' },
+          { id: 3 as const, label: 'Ch 3 Sensors' },
+          { id: 4 as const, label: 'Ch 4 Line Follower' },
+          { id: 5 as const, label: 'Ch 5 Wireless' },
+          { id: 6 as const, label: 'Ch 6 3D Design' },
+          { id: 7 as const, label: 'Ch 7 App Inventor' }
+        ];
+      case 'class-5':
+        return [
+          { id: 'all' as const, label: `All Words (${class5Glossary.length})` },
+          { id: 1 as const, label: 'Ch 1 Electronics' },
+          { id: 2 as const, label: 'Ch 2 Series Circuits' },
+          { id: 3 as const, label: 'Ch 3 Parallel & LDR' },
+          { id: 4 as const, label: 'Ch 4 Power Screw' },
+          { id: 5 as const, label: 'Ch 5 Rack & Pinion' },
+          { id: 6 as const, label: 'Ch 6 Remote Control' },
+          { id: 7 as const, label: 'Ch 7 Tinkercad' }
+        ];
+      case 'class-4':
+        return [
+          { id: 'all' as const, label: `All Words (${class4Glossary.length})` },
+          { id: 1 as const, label: 'Ch 1 Humanoid' },
+          { id: 2 as const, label: 'Ch 2 3D Pen' },
+          { id: 3 as const, label: 'Ch 3 Gears' },
+          { id: 4 as const, label: 'Ch 4 Structures' },
+          { id: 5 as const, label: 'Ch 5 Electro I' },
+          { id: 6 as const, label: 'Ch 6 Electro II' },
+          { id: 7 as const, label: 'Ch 7 PictoBlox' }
+        ];
+      case 'class-3':
+        return [
+          { id: 'all' as const, label: `All Words (${class3Glossary.length})` },
+          { id: 1 as const, label: 'Ch 1 Mechanics' },
+          { id: 2 as const, label: 'Ch 2 3D Pen' },
+          { id: 3 as const, label: 'Ch 3 Battery' },
+          { id: 4 as const, label: 'Ch 4 Waving Bot' },
+          { id: 5 as const, label: 'Ch 5 Crawlers' },
+          { id: 6 as const, label: 'Ch 6 Gears' },
+          { id: 7 as const, label: 'Ch 7 Scratch' }
+        ];
+      case 'class-2':
+        return [
+          { id: 'all' as const, label: `All Words (${class2Glossary.length})` },
+          { id: 1 as const, label: 'Ch 1 LEGO' },
+          { id: 2 as const, label: 'Ch 2 Tangram' },
+          { id: 3 as const, label: 'Ch 3 Battery' },
+          { id: 4 as const, label: 'Ch 4 STEM' },
+          { id: 5 as const, label: 'Ch 5 Queaky' }
+        ];
+      default:
+        return [
+          { id: 'all' as const, label: `All Words (${class1Glossary.length})` },
+          { id: 1 as const, label: 'Ch 1 LEGO' },
+          { id: 2 as const, label: 'Ch 2 Shapes' },
+          { id: 3 as const, label: 'Ch 3 Motors' },
+          { id: 4 as const, label: 'Ch 4 STEM' },
+          { id: 5 as const, label: 'Ch 5 Queaky' }
+        ];
+    }
+  };
+
+  const chapterChips = getChapterChips();
+
+  const classConfigs: { id: ClassTab; label: string; color: string; desc: string }[] = [
+    { id: 'class-1', label: 'Class 1 Glossary', color: '#2563EB', desc: 'Textbook Pages 45-46: Learn official vocabulary terms introduced across all 5 Class 1 chapters!' },
+    { id: 'class-2', label: 'Class 2 Glossary', color: '#7C3AED', desc: 'Textbook Pages 48-50: Learn official vocabulary terms introduced across all 5 Class 2 chapters!' },
+    { id: 'class-3', label: 'Class 3 Glossary', color: '#059669', desc: 'Textbook Pages 93-94: Master all 34 official vocabulary terms introduced across all 7 Class 3 chapters!' },
+    { id: 'class-4', label: 'Class 4 Glossary', color: '#D97706', desc: 'Textbook Pages 106-107: Master all 58 official vocabulary terms introduced across all 7 Class 4 chapters!' },
+    { id: 'class-5', label: 'Class 5 Glossary', color: '#DC2626', desc: 'Standard 5 Textbook: Master official electronics, mechanisms, and CAD terms across all 7 chapters!' },
+    { id: 'class-6', label: 'Class 6 Glossary', color: '#0284C7', desc: 'Standard 6 Textbook: Master microcontrollers, advanced sensors, line followers, and app terms!' },
+    { id: 'class-7', label: 'Class 7 Glossary', color: '#4F46E5', desc: 'Standard 7 Textbook: Master automation, Arduino, gesture control, aviation, and C/C++ terms!' },
+    { id: 'class-8', label: 'Class 8 Glossary', color: '#9333EA', desc: 'Standard 8 Textbook: Master mechatronics, ESP32 IoT, bionics, drones, and Python terms!' }
+  ];
+
+  const currentClassConfig = classConfigs.find(c => c.id === activeClass) || classConfigs[0];
 
   return (
     <div className="container" style={{ padding: '2rem 1.25rem' }}>
       {/* Header */}
-      <div style={{ textAlign: 'center', maxWidth: '680px', margin: '0 auto 2rem' }}>
+      <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 2rem' }}>
         <span className="badge-tag" style={{ backgroundColor: '#EFF6FF', color: 'var(--primary-blue)', marginBottom: '0.75rem' }}>
           <Sparkles size={16} /> Official Robotics Dictionary
         </span>
         <h1 style={{ fontSize: '2.4rem', color: 'var(--text-dark)', marginBottom: '0.5rem' }}>
-          {activeClass === 'class-4' ? 'Class 4' : activeClass === 'class-3' ? 'Class 3' : activeClass === 'class-2' ? 'Class 2' : 'Class 1'} STEM Glossary
+          {currentClassConfig.label.replace(' Glossary', '')} STEM Glossary
         </h1>
         <p style={{ color: 'var(--text-medium)', fontSize: '1.05rem' }}>
-          {activeClass === 'class-4'
-            ? 'Textbook Pages 106-107: Master all 58 official vocabulary terms introduced across all 7 Class 4 robotics chapters!'
-            : activeClass === 'class-3'
-            ? 'Textbook Pages 93-94: Master all 34 official vocabulary terms introduced across all 7 Class 3 robotics chapters!'
-            : activeClass === 'class-2'
-            ? 'Textbook Pages 48-50: Learn the official vocabulary terms introduced across all 5 Class 2 robotics chapters!'
-            : 'Textbook Pages 45-46: Learn the official vocabulary terms introduced across all 5 Class 1 robotics chapters!'}
+          {currentClassConfig.desc}
         </p>
 
         {/* Grade Switcher */}
         <div style={{ display: 'inline-flex', gap: '0.5rem', marginTop: '1rem', backgroundColor: '#F1F5F9', padding: '4px', borderRadius: 'var(--radius-lg)', flexWrap: 'wrap', justifyContent: 'center' }}>
-          <button
-            onClick={() => handleClassChange('class-1')}
-            style={{
-              padding: '0.45rem 1.1rem',
-              borderRadius: 'var(--radius-md)',
-              border: 'none',
-              fontWeight: 800,
-              fontSize: '0.9rem',
-              backgroundColor: activeClass === 'class-1' ? 'var(--primary-blue)' : 'transparent',
-              color: activeClass === 'class-1' ? '#FFFFFF' : 'var(--text-medium)',
-              cursor: 'pointer'
-            }}
-          >
-            Class 1 Glossary
-          </button>
-          <button
-            onClick={() => handleClassChange('class-2')}
-            style={{
-              padding: '0.45rem 1.1rem',
-              borderRadius: 'var(--radius-md)',
-              border: 'none',
-              fontWeight: 800,
-              fontSize: '0.9rem',
-              backgroundColor: activeClass === 'class-2' ? '#7C3AED' : 'transparent',
-              color: activeClass === 'class-2' ? '#FFFFFF' : 'var(--text-medium)',
-              cursor: 'pointer'
-            }}
-          >
-            Class 2 Glossary
-          </button>
-          <button
-            onClick={() => handleClassChange('class-3')}
-            style={{
-              padding: '0.45rem 1.1rem',
-              borderRadius: 'var(--radius-md)',
-              border: 'none',
-              fontWeight: 800,
-              fontSize: '0.9rem',
-              backgroundColor: activeClass === 'class-3' ? '#059669' : 'transparent',
-              color: activeClass === 'class-3' ? '#FFFFFF' : 'var(--text-medium)',
-              cursor: 'pointer'
-            }}
-          >
-            Class 3 Glossary
-          </button>
-          <button
-            onClick={() => handleClassChange('class-4')}
-            style={{
-              padding: '0.45rem 1.1rem',
-              borderRadius: 'var(--radius-md)',
-              border: 'none',
-              fontWeight: 800,
-              fontSize: '0.9rem',
-              backgroundColor: activeClass === 'class-4' ? '#D97706' : 'transparent',
-              color: activeClass === 'class-4' ? '#FFFFFF' : 'var(--text-medium)',
-              cursor: 'pointer'
-            }}
-          >
-            Class 4 Glossary
-          </button>
+          {classConfigs.map(cfg => (
+            <button
+              key={cfg.id}
+              onClick={() => handleClassChange(cfg.id)}
+              style={{
+                padding: '0.45rem 1rem',
+                borderRadius: 'var(--radius-md)',
+                border: 'none',
+                fontWeight: 800,
+                fontSize: '0.85rem',
+                backgroundColor: activeClass === cfg.id ? cfg.color : 'transparent',
+                color: activeClass === cfg.id ? '#FFFFFF' : 'var(--text-medium)',
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+            >
+              {cfg.label}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -222,7 +251,7 @@ export const GlossaryPage: React.FC = () => {
               style={{
                 padding: '0.4rem 0.8rem',
                 borderRadius: 'var(--radius-full)',
-                backgroundColor: selectedChapter === chip.id ? (activeClass === 'class-2' ? '#7C3AED' : 'var(--primary-blue)') : 'var(--bg-muted)',
+                backgroundColor: selectedChapter === chip.id ? currentClassConfig.color : 'var(--bg-muted)',
                 color: selectedChapter === chip.id ? '#FFFFFF' : 'var(--text-dark)',
                 fontSize: '0.85rem',
                 fontWeight: 700,

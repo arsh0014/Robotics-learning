@@ -68,11 +68,11 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, activeView: _activeV
           </div>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <span>ROBOBOX LEARN</span>
+              <span>ROBO LAB LMS</span>
               <span
                 className="brand-badge"
                 onClick={toggleClass}
-                title="Click to cycle between Class 1, Class 2, and Class 3"
+                title="Click to cycle between Class 1 through Class 8"
                 style={{
                   backgroundColor: badgeBg,
                   color: badgeColor,
@@ -98,7 +98,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, activeView: _activeV
                 title="Your Learning XP"
                 onClick={() => {
                   sound.playClick();
-                  onNavigate('achievements');
+                  onNavigate('progress');
                 }}
                 style={{ cursor: 'pointer' }}
               >

@@ -5,6 +5,10 @@ import { class1Chapters } from '../data/curriculum/class1';
 import { class2Chapters } from '../data/curriculum/class2';
 import { class3Chapters } from '../data/curriculum/class3';
 import { class4Chapters } from '../data/curriculum/class4';
+import { class5Chapters } from '../data/curriculum/class5';
+import { class6Chapters } from '../data/curriculum/class6';
+import { class7Chapters } from '../data/curriculum/class7';
+import { class8Chapters } from '../data/curriculum/class8';
 import { getChaptersForClass, getBadgesForClass } from '../data';
 import { useAuth } from './AuthContext';
 import { sound } from '../utils/audio';
@@ -104,6 +108,82 @@ const defaultProgressClass4: StudentProgress = {
   ]
 };
 
+const defaultProgressClass5: StudentProgress = {
+  completedLessons: ['c5-l1-1-intro'],
+  completedActivities: [],
+  completedModels: [],
+  completedChapters: [],
+  quizScores: {},
+  writtenAnswers: {},
+  xp: 110,
+  unlockedBadges: [],
+  notes: [
+    {
+      id: 'note-welcome-c5',
+      title: 'Class 5 Electronics & CAD Journey',
+      content: 'Exploring breadboards, Ohm\'s law, scissor lift power screws, and 3D modeling in Tinkercad!',
+      date: 'Today'
+    }
+  ]
+};
+
+const defaultProgressClass6: StudentProgress = {
+  completedLessons: ['c6-l1-1'],
+  completedActivities: [],
+  completedModels: [],
+  completedChapters: [],
+  quizScores: {},
+  writtenAnswers: {},
+  xp: 120,
+  unlockedBadges: [],
+  notes: [
+    {
+      id: 'note-welcome-c6',
+      title: 'Class 6 Microcontroller Journey',
+      content: 'Mastering ATmega328P, ultrasonic echolocation, L298N line followers, and MIT App Inventor!',
+      date: 'Today'
+    }
+  ]
+};
+
+const defaultProgressClass7: StudentProgress = {
+  completedLessons: ['c7-l1-1'],
+  completedActivities: [],
+  completedModels: [],
+  completedChapters: [],
+  quizScores: {},
+  writtenAnswers: {},
+  xp: 130,
+  unlockedBadges: [],
+  notes: [
+    {
+      id: 'note-welcome-c7',
+      title: 'Class 7 Automation & Aviation',
+      content: 'Building MPU6050 gesture controllers, Arduino radar obstacle avoiders, and FDM 3D printing!',
+      date: 'Today'
+    }
+  ]
+};
+
+const defaultProgressClass8: StudentProgress = {
+  completedLessons: ['c8-l1-1'],
+  completedActivities: [],
+  completedModels: [],
+  completedChapters: [],
+  quizScores: {},
+  writtenAnswers: {},
+  xp: 140,
+  unlockedBadges: [],
+  notes: [
+    {
+      id: 'note-welcome-c8',
+      title: 'Class 8 Mechatronics & Python',
+      content: 'Integrating ESP32 IoT dashboards, combat sumo bots, bionic prosthetic hands, and Python telemetry!',
+      date: 'Today'
+    }
+  ]
+};
+
 const ProgressContext = createContext<ProgressContextType | undefined>(undefined);
 
 export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -142,16 +222,52 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       try { c4 = JSON.parse(savedC4); } catch {}
     }
 
+    // 5. Check Class 5 storage
+    let c5 = defaultProgressClass5;
+    const savedC5 = localStorage.getItem('robobox_progress_class-5');
+    if (savedC5) {
+      try { c5 = JSON.parse(savedC5); } catch {}
+    }
+
+    // 6. Check Class 6 storage
+    let c6 = defaultProgressClass6;
+    const savedC6 = localStorage.getItem('robobox_progress_class-6');
+    if (savedC6) {
+      try { c6 = JSON.parse(savedC6); } catch {}
+    }
+
+    // 7. Check Class 7 storage
+    let c7 = defaultProgressClass7;
+    const savedC7 = localStorage.getItem('robobox_progress_class-7');
+    if (savedC7) {
+      try { c7 = JSON.parse(savedC7); } catch {}
+    }
+
+    // 8. Check Class 8 storage
+    let c8 = defaultProgressClass8;
+    const savedC8 = localStorage.getItem('robobox_progress_class-8');
+    if (savedC8) {
+      try { c8 = JSON.parse(savedC8); } catch {}
+    }
+
     return {
       'class-1': c1,
       'class-2': c2,
       'class-3': c3,
-      'class-4': c4
+      'class-4': c4,
+      'class-5': c5,
+      'class-6': c6,
+      'class-7': c7,
+      'class-8': c8
     };
   });
 
   const activeClassId = selectedClassId || 'class-1';
   const progress = progressState[activeClassId] || (
+    activeClassId === 'class-8' ? defaultProgressClass8 :
+    activeClassId === 'class-7' ? defaultProgressClass7 :
+    activeClassId === 'class-6' ? defaultProgressClass6 :
+    activeClassId === 'class-5' ? defaultProgressClass5 :
     activeClassId === 'class-4' ? defaultProgressClass4 :
     activeClassId === 'class-3' ? defaultProgressClass3 :
     activeClassId === 'class-2' ? defaultProgressClass2 :
@@ -172,6 +288,18 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
     if (progressState['class-4']) {
       localStorage.setItem('robobox_progress_class-4', JSON.stringify(progressState['class-4']));
+    }
+    if (progressState['class-5']) {
+      localStorage.setItem('robobox_progress_class-5', JSON.stringify(progressState['class-5']));
+    }
+    if (progressState['class-6']) {
+      localStorage.setItem('robobox_progress_class-6', JSON.stringify(progressState['class-6']));
+    }
+    if (progressState['class-7']) {
+      localStorage.setItem('robobox_progress_class-7', JSON.stringify(progressState['class-7']));
+    }
+    if (progressState['class-8']) {
+      localStorage.setItem('robobox_progress_class-8', JSON.stringify(progressState['class-8']));
     }
   }, [progressState]);
 
@@ -310,7 +438,16 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const isChapterCompleted = (chapterId: string) => progress.completedChapters.includes(chapterId);
 
   const getChapterProgress = (chapterId: string): number => {
-    const allChapters = [...class1Chapters, ...class2Chapters, ...class3Chapters, ...class4Chapters];
+    const allChapters = [
+      ...class1Chapters,
+      ...class2Chapters,
+      ...class3Chapters,
+      ...class4Chapters,
+      ...class5Chapters,
+      ...class6Chapters,
+      ...class7Chapters,
+      ...class8Chapters
+    ];
     const ch = allChapters.find(c => c.id === chapterId);
     if (!ch) return 0;
 
@@ -357,6 +494,10 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const getClassCompletedCount = (classId: string) => {
     const p = progressState[classId] || (
+      classId === 'class-8' ? defaultProgressClass8 :
+      classId === 'class-7' ? defaultProgressClass7 :
+      classId === 'class-6' ? defaultProgressClass6 :
+      classId === 'class-5' ? defaultProgressClass5 :
       classId === 'class-4' ? defaultProgressClass4 :
       classId === 'class-3' ? defaultProgressClass3 :
       classId === 'class-2' ? defaultProgressClass2 :

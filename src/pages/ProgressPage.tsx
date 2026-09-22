@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
 import { useProgress } from '../context/ProgressContext';
 import { useAuth } from '../context/AuthContext';
-import { class1Chapters, class2Chapters, class3Chapters, class4Chapters } from '../data';
+import {
+  class1Chapters,
+  class2Chapters,
+  class3Chapters,
+  class4Chapters,
+  class5Chapters,
+  class6Chapters,
+  class7Chapters,
+  class8Chapters
+} from '../data';
 import { sound } from '../utils/audio';
 import { Sparkles, CheckCircle2 } from 'lucide-react';
+
+type ClassTab = 'class-1' | 'class-2' | 'class-3' | 'class-4' | 'class-5' | 'class-6' | 'class-7' | 'class-8';
 
 export const ProgressPage: React.FC = () => {
   const { selectedClassId, setSelectedClassId } = useAuth();
@@ -14,43 +25,35 @@ export const ProgressPage: React.FC = () => {
     getChapterProgress
   } = useProgress();
 
-  const [activeTab, setActiveTab] = useState<'class-1' | 'class-2' | 'class-3' | 'class-4'>((selectedClassId as any) || 'class-4');
+  const [activeTab, setActiveTab] = useState<ClassTab>((selectedClassId as ClassTab) || 'class-1');
 
-  const c1Prog = getClassProgress('class-1');
-  const c2Prog = getClassProgress('class-2');
-  const c3Prog = getClassProgress('class-3');
-  const c4Prog = getClassProgress('class-4');
-
-  const c1Counts = getClassCompletedCount('class-1');
-  const c2Counts = getClassCompletedCount('class-2');
-  const c3Counts = getClassCompletedCount('class-3');
-  const c4Counts = getClassCompletedCount('class-4');
+  const classTabs: { id: ClassTab; title: string; color: string }[] = [
+    { id: 'class-1', title: 'Class 1', color: '#2563EB' },
+    { id: 'class-2', title: 'Class 2', color: '#7C3AED' },
+    { id: 'class-3', title: 'Class 3', color: '#059669' },
+    { id: 'class-4', title: 'Class 4', color: '#D97706' },
+    { id: 'class-5', title: 'Class 5', color: '#DC2626' },
+    { id: 'class-6', title: 'Class 6', color: '#0284C7' },
+    { id: 'class-7', title: 'Class 7', color: '#4F46E5' },
+    { id: 'class-8', title: 'Class 8', color: '#9333EA' }
+  ];
 
   const chapters =
+    activeTab === 'class-8' ? class8Chapters :
+    activeTab === 'class-7' ? class7Chapters :
+    activeTab === 'class-6' ? class6Chapters :
+    activeTab === 'class-5' ? class5Chapters :
     activeTab === 'class-4' ? class4Chapters :
     activeTab === 'class-3' ? class3Chapters :
     activeTab === 'class-2' ? class2Chapters :
     class1Chapters;
 
-  const currentProg =
-    activeTab === 'class-4' ? c4Prog :
-    activeTab === 'class-3' ? c3Prog :
-    activeTab === 'class-2' ? c2Prog :
-    c1Prog;
+  const currentProg = getClassProgress(activeTab);
+  const currentCounts = getClassCompletedCount(activeTab);
+  const currentTabConfig = classTabs.find(t => t.id === activeTab) || classTabs[0];
+  const tabColor = currentTabConfig.color;
 
-  const currentCounts =
-    activeTab === 'class-4' ? c4Counts :
-    activeTab === 'class-3' ? c3Counts :
-    activeTab === 'class-2' ? c2Counts :
-    c1Counts;
-
-  const tabColor =
-    activeTab === 'class-4' ? '#D97706' :
-    activeTab === 'class-3' ? '#059669' :
-    activeTab === 'class-2' ? '#7C3AED' :
-    'var(--primary-blue)';
-
-  const handleSwitchTab = (tab: 'class-1' | 'class-2' | 'class-3' | 'class-4') => {
+  const handleSwitchTab = (tab: ClassTab) => {
     sound.playClick();
     setActiveTab(tab);
     setSelectedClassId(tab);
@@ -59,7 +62,7 @@ export const ProgressPage: React.FC = () => {
   return (
     <div className="container" style={{ padding: '2.5rem 1.25rem' }}>
       {/* Header */}
-      <div style={{ textAlign: 'center', maxWidth: '680px', margin: '0 auto 2.5rem' }}>
+      <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 2.5rem' }}>
         <span className="badge-tag" style={{ backgroundColor: '#EFF6FF', color: 'var(--primary-blue)', marginBottom: '0.75rem' }}>
           <Sparkles size={16} /> Comprehensive Learning Record
         </span>
@@ -67,55 +70,32 @@ export const ProgressPage: React.FC = () => {
           My Robotics Progress
         </h1>
         <p style={{ color: 'var(--text-medium)', fontSize: '1.1rem' }}>
-          Track your journey, lessons mastered, quiz scores, and achievements across Class 1, Class 2, Class 3, and Class 4!
+          Track your journey, lessons mastered, quiz scores, and achievements across Class 1 through Class 8!
         </p>
       </div>
 
       {/* Class Switcher Tabs */}
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
-        <button
-          className={activeTab === 'class-1' ? 'btn-primary' : 'btn-secondary'}
-          onClick={() => handleSwitchTab('class-1')}
-          style={{ padding: '0.65rem 1.25rem', fontSize: '0.95rem', gap: '0.4rem' }}
-        >
-          <span>Class 1 ({c1Prog}%)</span>
-        </button>
-        <button
-          className={activeTab === 'class-2' ? 'btn-primary' : 'btn-secondary'}
-          onClick={() => handleSwitchTab('class-2')}
-          style={{
-            padding: '0.65rem 1.25rem',
-            fontSize: '0.95rem',
-            gap: '0.4rem',
-            backgroundColor: activeTab === 'class-2' ? '#7C3AED' : undefined
-          }}
-        >
-          <span>Class 2 ({c2Prog}%)</span>
-        </button>
-        <button
-          className={activeTab === 'class-3' ? 'btn-primary' : 'btn-secondary'}
-          onClick={() => handleSwitchTab('class-3')}
-          style={{
-            padding: '0.65rem 1.25rem',
-            fontSize: '0.95rem',
-            gap: '0.4rem',
-            backgroundColor: activeTab === 'class-3' ? '#059669' : undefined
-          }}
-        >
-          <span>Class 3 ({c3Prog}%)</span>
-        </button>
-        <button
-          className={activeTab === 'class-4' ? 'btn-primary' : 'btn-secondary'}
-          onClick={() => handleSwitchTab('class-4')}
-          style={{
-            padding: '0.65rem 1.25rem',
-            fontSize: '0.95rem',
-            gap: '0.4rem',
-            backgroundColor: activeTab === 'class-4' ? '#D97706' : undefined
-          }}
-        >
-          <span>Class 4 ({c4Prog}%)</span>
-        </button>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '0.6rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
+        {classTabs.map(tab => {
+          const prog = getClassProgress(tab.id);
+          const isSelected = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              className={isSelected ? 'btn-primary' : 'btn-secondary'}
+              onClick={() => handleSwitchTab(tab.id)}
+              style={{
+                padding: '0.55rem 1.1rem',
+                fontSize: '0.9rem',
+                gap: '0.4rem',
+                backgroundColor: isSelected ? tab.color : undefined,
+                borderColor: isSelected ? tab.color : undefined
+              }}
+            >
+              <span>{tab.title} ({prog}%)</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Overall Progress Stat Cards Grid */}
@@ -166,7 +146,7 @@ export const ProgressPage: React.FC = () => {
       {/* Chapter-by-Chapter Breakdown */}
       <div className="card-base" style={{ padding: '2rem', background: '#FFFFFF' }}>
         <h2 style={{ fontSize: '1.4rem', color: 'var(--text-dark)', marginBottom: '1.5rem' }}>
-          {activeTab === 'class-4' ? 'Class 4' : activeTab === 'class-3' ? 'Class 3' : activeTab === 'class-2' ? 'Class 2' : 'Class 1'} Chapter Breakdown & Quiz Scores
+          {currentTabConfig.title} Chapter Breakdown & Quiz Scores
         </h2>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
