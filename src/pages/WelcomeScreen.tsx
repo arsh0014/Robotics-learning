@@ -93,9 +93,9 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStartLearning, o
         </div>
 
         {/* Sponsor / implementing agency */}
-        <div style={{ marginTop: '2.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.65rem' }}>
-          <div style={{ width: 76, height: 64, overflow: 'hidden', borderRadius: '0.6rem', background: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <img src="/sarva-hitam-logo.png" alt="Sarva Hitam Manav Seva Sansthan logo" style={{ width: 118, maxWidth: 'none', transform: 'translateY(-2px)' }} />
+        <div style={{ marginTop: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
+          <div style={{ width: 54, height: 46, overflow: 'hidden', borderRadius: '0.6rem', background: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <img src="/sarva-hitam-logo.png" alt="Sarva Hitam Manav Seva Sansthan logo" style={{ width: 86, maxWidth: 'none', transform: 'translateY(-2px)' }} />
           </div>
           <div style={{ fontSize: '0.82rem', color: 'var(--text-light)', textAlign: 'center' }}>
             Sponsor / Implementing Agency: <strong style={{ color: 'var(--text-medium)' }}>Sarva Hitam Manav Seva Sansthan (SHMSS)</strong>
