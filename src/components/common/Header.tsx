@@ -11,7 +11,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onNavigate, activeView: _activeView }) => {
   const { role, currentStudent, selectedClassId, setSelectedClassId, logout } = useAuth();
-  const { progress } = useProgress();
+  const { progress, isClassUnlocked } = useProgress();
 
   const toggleClass = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -19,6 +19,10 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, activeView: _activeV
     const sequence = ['class-1', 'class-2', 'class-3', 'class-4', 'class-5', 'class-6', 'class-7', 'class-8'];
     const curIdx = sequence.indexOf(selectedClassId || 'class-1');
     const nextClass = sequence[(curIdx + 1) % sequence.length];
+    if (!isClassUnlocked(nextClass)) {
+      sound.playTryAgain();
+      return;
+    }
     setSelectedClassId(nextClass);
   };
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { allClasses, getChaptersForClass } from '../data';
 import { useAuth } from '../context/AuthContext';
+import { useProgress } from '../context/ProgressContext';
 import { sound } from '../utils/audio';
 import { Lock, Sparkles, CheckCircle2, ArrowRight, ArrowLeft, X } from 'lucide-react';
 
@@ -11,6 +12,7 @@ interface ClassSelectScreenProps {
 
 export const ClassSelectScreen: React.FC<ClassSelectScreenProps> = ({ onClassSelected, onBack }) => {
   const { setSelectedClassId } = useAuth();
+  const { isClassUnlocked } = useProgress();
   const [detailsClassId, setDetailsClassId] = useState<string | null>(null);
   const detailsClass = allClasses.find((cls) => cls.id === detailsClassId);
   const detailsChapters = detailsClass ? getChaptersForClass(detailsClass.id) : [];
@@ -50,25 +52,29 @@ export const ClassSelectScreen: React.FC<ClassSelectScreenProps> = ({ onClassSel
 
       {/* Grid of Classes 1 to 8 */}
       <div className="class-select-grid">
-        {allClasses.map(cls => (
+        {allClasses.map(cls => {
+          const isUnlocked = isClassUnlocked(cls.id);
+          const previousClass = allClasses[cls.number - 2];
+
+          return (
           <div
             key={cls.id}
-            className={`card-base ${cls.isActive ? 'card-interactive' : ''}`}
-            onClick={() => handleSelect(cls.id, cls.isActive)}
+            className={`card-base ${isUnlocked ? 'card-interactive' : ''}`}
+            onClick={() => handleSelect(cls.id, isUnlocked)}
             style={{
               padding: '1.75rem',
-              backgroundColor: cls.isActive ? '#FFFFFF' : '#F8FAFC',
-              border: cls.isActive ? `3px solid ${cls.themeColor}` : '2px solid var(--border-light)',
+              backgroundColor: isUnlocked ? '#FFFFFF' : '#F8FAFC',
+              border: isUnlocked ? `3px solid ${cls.themeColor}` : '2px solid var(--border-light)',
               borderRadius: 'var(--radius-xl)',
-              cursor: cls.isActive ? 'pointer' : 'not-allowed',
-              opacity: cls.isActive ? 1 : 0.75,
+              cursor: isUnlocked ? 'pointer' : 'not-allowed',
+              opacity: isUnlocked ? 1 : 0.75,
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'flex-start',
               alignSelf: 'stretch',
               minHeight: '375px',
               height: '100%',
-              boxShadow: cls.isActive ? 'var(--shadow-card-hover)' : 'var(--shadow-sm)',
+              boxShadow: isUnlocked ? 'var(--shadow-card-hover)' : 'var(--shadow-sm)',
               position: 'relative'
             }}
           >
@@ -79,12 +85,12 @@ export const ClassSelectScreen: React.FC<ClassSelectScreenProps> = ({ onClassSel
                   style={{
                     fontSize: '1.5rem',
                     fontWeight: 900,
-                    color: cls.isActive ? cls.themeColor : 'var(--text-light)'
+                    color: isUnlocked ? cls.themeColor : 'var(--text-light)'
                   }}
                 >
                   {cls.title}
                 </span>
-                {cls.isActive ? (
+                {isUnlocked ? (
                   <span className="badge-tag" style={{ backgroundColor: '#D1FAE5', color: '#065F46' }}>
                     <CheckCircle2 size={14} /> ACTIVE
                   </span>
@@ -115,6 +121,11 @@ export const ClassSelectScreen: React.FC<ClassSelectScreenProps> = ({ onClassSel
               }}>
                 {cls.description}
               </p>
+              {!isUnlocked && previousClass && (
+                <p style={{ color: 'var(--text-light)', fontSize: '0.8rem', fontWeight: 700, marginBottom: '0.75rem' }}>
+                  Score 75%+ in {previousClass.title}'s final quiz to unlock.
+                </p>
+              )}
               <button
                 type="button"
                 onClick={(event) => {
@@ -137,7 +148,7 @@ export const ClassSelectScreen: React.FC<ClassSelectScreenProps> = ({ onClassSel
             </div>
 
             {/* Action Button */}
-            {cls.isActive ? (
+            {isUnlocked ? (
               <button
                 className="btn-primary"
                 style={{ width: '100%', gap: '0.5rem', backgroundColor: cls.themeColor, marginTop: 'auto' }}
@@ -152,11 +163,12 @@ export const ClassSelectScreen: React.FC<ClassSelectScreenProps> = ({ onClassSel
                 style={{ width: '100%', gap: '0.4rem', opacity: 0.7, cursor: 'not-allowed', marginTop: 'auto' }}
               >
                 <Lock size={16} />
-                <span>Coming Soon</span>
+                <span>Complete previous quiz</span>
               </button>
             )}
           </div>
-        ))}
+          );
+        })}
       </div>
 
       {detailsClass && (

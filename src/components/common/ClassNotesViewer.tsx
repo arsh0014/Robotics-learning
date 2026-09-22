@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Chapter } from '../../types/curriculum';
 import { BookOpen, ChevronLeft, ChevronRight } from 'lucide-react';
+import { QuizEngine } from '../student/QuizEngine';
 
 interface ClassNotesViewerProps {
   chapters: Chapter[];
@@ -10,6 +11,7 @@ interface ClassNotesViewerProps {
 export const ClassNotesViewer: React.FC<ClassNotesViewerProps> = ({ chapters }) => {
   const [chapterIndex, setChapterIndex] = useState(0);
   const [lessonIndex, setLessonIndex] = useState(0);
+  const [isQuizOpen, setIsQuizOpen] = useState(false);
   const chapter = chapters[chapterIndex] || chapters[0];
   const lesson = chapter?.lessons[lessonIndex] || chapter?.lessons[0];
 
@@ -18,6 +20,7 @@ export const ClassNotesViewer: React.FC<ClassNotesViewerProps> = ({ chapters }) 
   const changeChapter = (index: number) => {
     setChapterIndex(index);
     setLessonIndex(0);
+    setIsQuizOpen(false);
   };
 
   const isLastLesson = lessonIndex === chapter.lessons.length - 1;
@@ -31,6 +34,8 @@ export const ClassNotesViewer: React.FC<ClassNotesViewerProps> = ({ chapters }) 
 
     if (!isLastLesson) {
       setLessonIndex((index) => index + 1);
+    } else {
+      setIsQuizOpen(true);
     }
   };
 
@@ -44,6 +49,14 @@ export const ClassNotesViewer: React.FC<ClassNotesViewerProps> = ({ chapters }) 
         <h3 style={{ marginTop: '0.6rem', fontSize: '1.35rem', color: 'var(--text-dark)' }}>{chapter.title}</h3>
       </div>
       <div style={{ padding: '1.5rem' }}>
+        {isQuizOpen ? (
+          <QuizEngine
+            questions={chapter.quiz}
+            chapterId={chapter.id}
+            chapterTitle={chapter.title}
+          />
+        ) : (
+          <>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem', color: 'var(--primary-blue)', fontWeight: 800 }}>
           <BookOpen size={18} /> Lesson {lessonIndex + 1} of {chapter.lessons.length}
         </div>
@@ -53,8 +66,10 @@ export const ClassNotesViewer: React.FC<ClassNotesViewerProps> = ({ chapters }) 
         <div style={{ background: '#F8FAFC', padding: '1.25rem 1.5rem', borderRadius: 'var(--radius-lg)', marginBottom: '1.5rem' }}>{lesson.keyPoints.map((point, index) => <div key={point} style={{ display: 'flex', gap: '0.7rem', marginBottom: index < lesson.keyPoints.length - 1 ? '0.75rem' : 0, lineHeight: 1.45 }}><strong style={{ color: chapter.color }}>{index + 1}.</strong><span>{point}</span></div>)}</div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '1rem', borderTop: '1px solid var(--border-light)' }}>
           <button type="button" className="btn-secondary" disabled={lessonIndex === 0} onClick={() => setLessonIndex((index) => index - 1)} style={{ visibility: lessonIndex === 0 ? 'hidden' : 'visible', gap: '0.5rem' }}><ChevronLeft size={17} /> Previous</button>
-          <button type="button" className="btn-primary" disabled={isLastLesson && !hasNextChapter} onClick={handleNext} style={{ backgroundColor: chapter.color, gap: '0.5rem', minWidth: '150px' }}>{isLastLesson && hasNextChapter ? 'Next Chapter' : 'Next'} <ChevronRight size={17} /></button>
+          <button type="button" className="btn-primary" onClick={handleNext} style={{ backgroundColor: chapter.color, gap: '0.5rem', minWidth: '150px' }}>{isLastLesson ? (hasNextChapter ? 'Next Chapter' : 'Quiz') : 'Next'} <ChevronRight size={17} /></button>
         </div>
+          </>
+        )}
       </div>
     </div>
   </div>;

@@ -203,6 +203,7 @@ export const ChapterDetail: React.FC<ChapterDetailProps> = ({ chapterId, onBack,
             chapterId={chapter.id}
             chapterTitle={chapter.title}
             chapterColor={chapter.color}
+            onOpenQuiz={nextChapter ? undefined : () => setActiveTab('quiz')}
             onFinishLessons={() => {
               handleFinishSection();
               setActiveTab('activity');

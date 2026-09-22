@@ -29,6 +29,7 @@ interface ProgressContextType {
   overallClassProgress: number; // 0 to 100 percentage for active class
   getClassProgress: (classId: string) => number; // 0 to 100 percentage for specific class
   getClassCompletedCount: (classId: string) => { lessons: number; chapters: number; xp: number };
+  isClassUnlocked: (classId: string) => boolean;
   unlockedBadgeObjects: Badge[];
 }
 
@@ -510,6 +511,18 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     };
   };
 
+  const isClassUnlocked = (classId: string): boolean => {
+    if (classId === 'class-1') return true;
+
+    const classNumber = Number(classId.replace('class-', ''));
+    const previousClassId = `class-${classNumber - 1}`;
+    const previousChapters = getChaptersForClass(previousClassId);
+    const finalChapter = previousChapters[previousChapters.length - 1];
+    const previousProgress = progressState[previousClassId];
+
+    return Boolean(finalChapter && previousProgress && (previousProgress.quizScores[finalChapter.id] || 0) >= 75);
+  };
+
   const overallClassProgress = getClassProgress(activeClassId);
 
   const activeBadges = getBadgesForClass(activeClassId);
@@ -533,6 +546,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         overallClassProgress,
         getClassProgress,
         getClassCompletedCount,
+        isClassUnlocked,
         unlockedBadgeObjects
       }}
     >
