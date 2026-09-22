@@ -40,9 +40,9 @@ export const App: React.FC = () => {
   const isClass7 = selectedClassId === 'class-7';
   const isClass8 = selectedClassId === 'class-8';
 
-  // Navigation View - default directly to dashboard (no login required)
-  const [currentView, setCurrentView] = useState<string>('dashboard');
-  const [previousView, setPreviousView] = useState<string>('dashboard');
+  // Always greet visitors on the landing page before they enter a learning portal.
+  const [currentView, setCurrentView] = useState<string>('welcome');
+  const [previousView, setPreviousView] = useState<string>('welcome');
 
   // Active Chapter ID for ChapterDetail view
   const [activeChapterId, setActiveChapterId] = useState<string>(() => {
@@ -87,12 +87,13 @@ export const App: React.FC = () => {
     return (
       <RoleSelectScreen
         onBack={() => handleNavigate(previousView)}
-        onRoleSelected={() => {
-          if (role === 'teacher' || role === 'admin') {
-            handleNavigate('dashboard');
-          } else {
+        onRoleSelected={(selectedRole) => {
+          if (selectedRole === 'teacher') {
             handleNavigate('class_select');
+            return;
           }
+
+          handleNavigate('dashboard');
         }}
       />
     );

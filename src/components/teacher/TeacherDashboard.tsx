@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { mockTeachersByClass } from '../../data/mockUsers';
+import { useAuth } from '../../context/AuthContext';
 import { getChaptersForClass } from '../../data';
 import { sound } from '../../utils/audio';
 import { BookOpen, ClipboardCheck, Layers } from 'lucide-react';
@@ -15,7 +16,10 @@ const classes: { id: ClassId; label: string; color: string }[] = [
 ];
 
 export const TeacherDashboard: React.FC = () => {
-  const [selectedClassId, setSelectedClassId] = useState<ClassId>('class-5');
+  const { selectedClassId: activeClassId, setSelectedClassId } = useAuth();
+  const selectedClassId: ClassId = classes.some((item) => item.id === activeClassId)
+    ? activeClassId as ClassId
+    : 'class-1';
   const teacher = mockTeachersByClass[selectedClassId] || mockTeachersByClass['class-1'];
   const chapters = getChaptersForClass(selectedClassId);
   const selectedClass = classes.find((item) => item.id === selectedClassId)!;

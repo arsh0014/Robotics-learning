@@ -1,10 +1,11 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
+import { UserRole } from '../types/curriculum';
 import { sound } from '../utils/audio';
 import { BookOpen, Shield, ArrowRight, ArrowLeft, Sparkles } from 'lucide-react';
 
 interface RoleSelectScreenProps {
-  onRoleSelected: () => void;
+  onRoleSelected: (role: UserRole) => void;
   onBack: () => void;
 }
 
@@ -14,13 +15,13 @@ export const RoleSelectScreen: React.FC<RoleSelectScreenProps> = ({ onRoleSelect
   const handleSelectTeacher = () => {
     sound.playClick();
     setRole('teacher');
-    onRoleSelected();
+    onRoleSelected('teacher');
   };
 
   const handleSelectAdmin = () => {
     sound.playClick();
     setRole('admin');
-    onRoleSelected();
+    onRoleSelected('admin');
   };
 
   return (

@@ -49,7 +49,7 @@ export const ClassSelectScreen: React.FC<ClassSelectScreenProps> = ({ onClassSel
       </div>
 
       {/* Grid of Classes 1 to 8 */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1.5rem' }}>
+      <div className="class-select-grid">
         {allClasses.map(cls => (
           <div
             key={cls.id}
@@ -65,7 +65,9 @@ export const ClassSelectScreen: React.FC<ClassSelectScreenProps> = ({ onClassSel
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'flex-start',
-              alignSelf: 'start',
+              alignSelf: 'stretch',
+              minHeight: '375px',
+              height: '100%',
               boxShadow: cls.isActive ? 'var(--shadow-card-hover)' : 'var(--shadow-sm)',
               position: 'relative'
             }}
@@ -138,7 +140,7 @@ export const ClassSelectScreen: React.FC<ClassSelectScreenProps> = ({ onClassSel
             {cls.isActive ? (
               <button
                 className="btn-primary"
-                style={{ width: '100%', gap: '0.5rem', backgroundColor: cls.themeColor, marginTop: '0.25rem' }}
+                style={{ width: '100%', gap: '0.5rem', backgroundColor: cls.themeColor, marginTop: 'auto' }}
               >
                 <span>Enter {cls.title}</span>
                 <ArrowRight size={18} />
@@ -147,7 +149,7 @@ export const ClassSelectScreen: React.FC<ClassSelectScreenProps> = ({ onClassSel
               <button
                 className="btn-secondary"
                 disabled
-                style={{ width: '100%', gap: '0.4rem', opacity: 0.7, cursor: 'not-allowed', marginTop: '0.25rem' }}
+                style={{ width: '100%', gap: '0.4rem', opacity: 0.7, cursor: 'not-allowed', marginTop: 'auto' }}
               >
                 <Lock size={16} />
                 <span>Coming Soon</span>

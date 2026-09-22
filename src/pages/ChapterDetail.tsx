@@ -199,10 +199,14 @@ export const ChapterDetail: React.FC<ChapterDetailProps> = ({ chapterId, onBack,
       <div>
         {activeTab === 'lessons' && (
           <LessonViewer
+            key={chapter.id}
             lessons={chapter.lessons}
             chapterId={chapter.id}
             chapterTitle={chapter.title}
             chapterColor={chapter.color}
+            nextChapter={nextChapter}
+            onNextChapter={onNextChapter}
+            onOpenQuiz={() => setActiveTab('quiz')}
             onFinishLessons={() => {
               handleFinishSection();
               setActiveTab('activity');

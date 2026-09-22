@@ -11,6 +11,13 @@ interface LessonViewerProps {
   chapterTitle: string;
   chapterColor: string;
   onFinishLessons: () => void;
+  nextChapter?: {
+    id: string;
+    number: number;
+    title: string;
+  };
+  onNextChapter?: (nextChapterId: string) => void;
+  onOpenQuiz?: () => void;
 }
 
 export const LessonViewer: React.FC<LessonViewerProps> = ({
@@ -18,7 +25,10 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({
   chapterId,
   chapterTitle,
   chapterColor: _chapterColor,
-  onFinishLessons
+  onFinishLessons,
+  nextChapter,
+  onNextChapter,
+  onOpenQuiz
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showTryItFeedback, setShowTryItFeedback] = useState(false);
@@ -28,6 +38,9 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({
   if (!lesson) return null;
 
   const isCompleted = isLessonCompleted(lesson.id);
+  const isLastLesson = currentIndex === lessons.length - 1;
+  const canGoNextChapter = Boolean(isLastLesson && nextChapter && onNextChapter);
+  const canOpenQuiz = Boolean(isLastLesson && !canGoNextChapter && onOpenQuiz);
 
   const handleNext = () => {
     sound.playClick();
@@ -36,6 +49,10 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({
 
     if (currentIndex < lessons.length - 1) {
       setCurrentIndex(c => c + 1);
+    } else if (canGoNextChapter && nextChapter && onNextChapter) {
+      onNextChapter(nextChapter.id);
+    } else if (canOpenQuiz && onOpenQuiz) {
+      onOpenQuiz();
     } else {
       onFinishLessons();
     }
@@ -173,7 +190,9 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({
             onClick={handleNext}
             style={{ gap: '0.5rem', minWidth: '150px' }}
           >
-            <span>{currentIndex === lessons.length - 1 ? 'Finish Lessons' : 'Next Lesson'}</span>
+            <span>
+              {canGoNextChapter ? 'Next Chapter' : canOpenQuiz ? 'Quiz' : isLastLesson ? 'Finish Lessons' : 'Next'}
+            </span>
             <ArrowRight size={18} />
           </button>
         </div>
