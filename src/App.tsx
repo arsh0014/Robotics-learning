@@ -5,6 +5,7 @@ import { Header } from './components/common/Header';
 import { BottomNav } from './components/common/BottomNav';
 import { WelcomeScreen } from './pages/WelcomeScreen';
 import { RoleSelectScreen } from './pages/RoleSelectScreen';
+import { CommonLoginScreen } from './pages/CommonLoginScreen';
 import { ClassSelectScreen } from './pages/ClassSelectScreen';
 import { StudentDashboard } from './pages/StudentDashboard';
 import { ChapterDetail } from './pages/ChapterDetail';
@@ -13,6 +14,7 @@ import { AchievementsPage } from './pages/AchievementsPage';
 import { ProgressPage } from './pages/ProgressPage';
 import { TeacherDashboard } from './components/teacher/TeacherDashboard';
 import { AdminDashboard } from './components/admin/AdminDashboard';
+import { UserRole } from './types/curriculum';
 import { StemLabExperiments } from './components/student/interactive/StemLabExperiments';
 import { QueakySynthesizer } from './components/student/interactive/QueakySynthesizer';
 import { Class2StemLab } from './components/class2/Class2StemLab';
@@ -32,7 +34,7 @@ import { PythonStudio } from './components/class8/PythonStudio';
 import { StudentNotebook } from './components/student/interactive/StudentNotebook';
 
 export const App: React.FC = () => {
-  const { role, selectedClassId, setSelectedClassId, loginAsStudent } = useAuth();
+  const { role, setRole, selectedClassId, setSelectedClassId, loginAsStudent } = useAuth();
   const { isClassUnlocked } = useProgress();
   const isClass2 = selectedClassId === 'class-2';
   const isClass3 = selectedClassId === 'class-3';
@@ -42,9 +44,36 @@ export const App: React.FC = () => {
   const isClass7 = selectedClassId === 'class-7';
   const isClass8 = selectedClassId === 'class-8';
 
-  // Always greet visitors on the landing page before they enter a learning portal.
+  // Navigation states
   const [currentView, setCurrentView] = useState<string>('welcome');
   const [previousView, setPreviousView] = useState<string>('welcome');
+  const [loginRole, setLoginRole] = useState<UserRole>('student');
+  const [loginReturnView, setLoginReturnView] = useState<string>('welcome');
+
+  // Handle browser back and forward button navigation
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      if (event.state && event.state.view) {
+        setCurrentView(event.state.view);
+        if (event.state.loginRole) {
+          setLoginRole(event.state.loginRole);
+        }
+        if (event.state.loginReturnView) {
+          setLoginReturnView(event.state.loginReturnView);
+        }
+      } else {
+        const hash = window.location.hash.replace('#', '');
+        if (hash) {
+          setCurrentView(hash);
+        } else {
+          setCurrentView('welcome');
+        }
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   useEffect(() => {
     if (role === 'student' && !isClassUnlocked(selectedClassId)) {
@@ -63,18 +92,40 @@ export const App: React.FC = () => {
     return selectedClassId === 'class-2' ? 'c2-ch-1-lego-wall' : 'ch-1-lego-wall';
   });
 
-  const handleNavigate = (view: string) => {
+  const handleNavigate = (
+    view: string,
+    options?: { loginRole?: UserRole; returnView?: string; skipHistory?: boolean }
+  ) => {
     if (view !== currentView) {
       setPreviousView(currentView);
     }
+    if (options?.loginRole) {
+      setLoginRole(options.loginRole);
+    }
+    const effectiveReturn = options?.returnView || currentView;
+    if (options?.returnView) {
+      setLoginReturnView(options.returnView);
+    }
+
+    if (!options?.skipHistory) {
+      window.history.pushState(
+        {
+          view,
+          loginRole: options?.loginRole || loginRole,
+          loginReturnView: effectiveReturn
+        },
+        '',
+        `#${view}`
+      );
+    }
+
     setCurrentView(view);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSelectChapter = (chapterId: string) => {
     setActiveChapterId(chapterId);
-    setCurrentView('chapter_detail');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    handleNavigate('chapter_detail');
   };
 
   // Welcome Screen (Full page, no header/nav)
@@ -82,37 +133,60 @@ export const App: React.FC = () => {
     return (
       <WelcomeScreen
         onStartLearning={() => {
-          loginAsStudent();
-          handleNavigate('class_select');
+          handleNavigate('login', { loginRole: 'student', returnView: 'welcome' });
         }}
-        onLogin={() => handleNavigate('role_select')}
+        onLogin={() => {
+          handleNavigate('login', { loginRole: 'student', returnView: 'welcome' });
+        }}
       />
     );
   }
 
-  // Role Selection Screen
+  // Common Login Screen (Single Common Login Page for Student, Teacher, and Admin)
+  if (currentView === 'login') {
+    return (
+      <CommonLoginScreen
+        initialRole={loginRole}
+        onBack={() => {
+          handleNavigate(loginReturnView || previousView || 'welcome');
+        }}
+        onGoToPortalSelect={() => {
+          handleNavigate('role_select', { returnView: 'login' });
+        }}
+        onSuccess={(authenticatedRole) => {
+          if (authenticatedRole === 'student') {
+            loginAsStudent();
+            handleNavigate('class_select');
+          } else if (authenticatedRole === 'teacher') {
+            setRole('teacher');
+            handleNavigate('dashboard');
+          } else if (authenticatedRole === 'admin') {
+            setRole('admin');
+            handleNavigate('dashboard');
+          }
+        }}
+      />
+    );
+  }
+
+  // Role Selection Screen ("Who are you today?")
   if (currentView === 'role_select') {
     return (
       <RoleSelectScreen
-        onBack={() => handleNavigate(previousView)}
+        onBack={() => handleNavigate(previousView || 'welcome')}
         onRoleSelected={(selectedRole) => {
-          if (selectedRole === 'teacher') {
-            handleNavigate('class_select');
-            return;
-          }
-
-          handleNavigate('dashboard');
+          handleNavigate('login', { loginRole: selectedRole, returnView: 'role_select' });
         }}
       />
     );
   }
 
-  // Class Selection Screen
+  // Class Selection Screen (Select Your Robotics Grade)
   if (currentView === 'class_select') {
     return (
       <ClassSelectScreen
         onClassSelected={() => handleNavigate('dashboard')}
-        onBack={() => handleNavigate(previousView)}
+        onBack={() => handleNavigate(previousView || 'login', { loginRole: 'student', returnView: 'welcome' })}
       />
     );
   }
